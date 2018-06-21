@@ -1,5 +1,5 @@
 {
-  "name": "scuttlespace-lib-auth",
+  "name": "scuttlespace-service-auth",
   "version": "0.0.1",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "main": "dist/index",
