@@ -2,7 +2,7 @@ import "mocha";
 import "should";
 
 import * as db from "../db";
-import setup from "../setup";
+// import setup from "../setup";
 
 function getEnvValue(envVar: string): string | never {
   const val = process.env[envVar];
@@ -14,21 +14,22 @@ function getEnvValue(envVar: string): string | never {
 
 function getDbConfig(): db.IDbConfig {
   const dbConfig = {
-    database: getEnvValue("SCUTTLESPACE_DB"),
-    host: getEnvValue("SCUTTLESPACE_HOST"),
-    password: getEnvValue("SCUTTLESPACE_PASSWORD"),
-    port: parseInt(getEnvValue("SCUTTLESPACE_PORT"), 10),
-    user: getEnvValue("SCUTTLESPACE_USER")
+    database: getEnvValue("SCUTTLESPACE_DB_NAME"),
+    host: getEnvValue("SCUTTLESPACE_DB_HOST"),
+    password: getEnvValue("SCUTTLESPACE_DB_PASSWORD"),
+    port: parseInt(getEnvValue("SCUTTLESPACE_DB_PORT"), 10),
+    user: getEnvValue("SCUTTLESPACE_DB_USER")
   };
   return dbConfig;
 }
 
-describe("auth", async () => {
+describe("auth", () => {
   before(async () => {
+    console.log(getDbConfig());
     await db.init(getDbConfig());
   });
 
   it("sets up tables", async () => {
-    await setup();
+   //  await setup();
   });
 });

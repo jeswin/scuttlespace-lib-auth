@@ -22,7 +22,7 @@
     "marked": "^0.4.0",
     "os-homedir": "^1.0.2",
     "pg": "^7.4.3",
-    "psychopiggy": "^0.0.1",
+    "psychopiggy": "^0.0.2",
     "serialist": "^0.0.3",
     "winston": "^3.0.0"
   },

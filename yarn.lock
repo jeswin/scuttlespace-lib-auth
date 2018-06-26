@@ -394,9 +394,9 @@ process-nextick-args@~2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-2.0.0.tgz#a37d732f4271b4ab1ad070d35508e8290788ffaa"
 
-psychopiggy@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/psychopiggy/-/psychopiggy-0.0.1.tgz#a08bda3490897d4df4f7ab9a9b9f7cc2f18466cf"
+psychopiggy@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/psychopiggy/-/psychopiggy-0.0.2.tgz#5c25e3f4781efe67808eaf43f91b638bcb49afd4"
   dependencies:
     "@types/node" "^10.0.6"
     pg "^7.4.3"
