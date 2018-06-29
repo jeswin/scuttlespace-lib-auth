@@ -232,6 +232,15 @@ psychopiggy@^0.0.2:
     pg "^7.4.3"
     pg-params "^0.0.6"
 
+scuttlespace-service-auth@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/scuttlespace-service-auth/-/scuttlespace-service-auth-0.0.1.tgz#9412e3669adc44daa9a8e4db44bfbd6484383cf4"
+  dependencies:
+    "@types/node" "^10.3.2"
+    "@types/pg" "^7.4.9"
+    pg "^7.4.3"
+    psychopiggy "^0.0.2"
+
 semver@4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.2.tgz#c7a07158a80bedd052355b770d82d6640f803be7"
