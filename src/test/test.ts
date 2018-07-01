@@ -167,7 +167,7 @@ describe("auth", () => {
       about: "hal9000 supervisor (deceased)",
       domain: "jeswin.org",
       enabled: true,
-      network_id: "jpk001",
+      networkId: "jpk001",
       username: "jeswin"
     };
     await auth.createAccount(accountInfo, pool);

@@ -5,7 +5,7 @@ export interface ICreateAccountArgs {
   about: string;
   domain: string;
   enabled: boolean;
-  network_id: string;
+  networkId: string;
   username: string;
 }
 
@@ -13,7 +13,13 @@ export default async function createAccount(
   accountInfo: ICreateAccountArgs,
   pool: pg.Pool
 ): Promise<void> {
-  const params = new psy.Params(accountInfo);
+  const params = new psy.Params({
+    about: accountInfo.about,
+    domain: accountInfo.domain,
+    enabled: accountInfo.enabled,
+    network_id: accountInfo.networkId,
+    username: accountInfo.username
+  });
   await pool.query(
     `
     INSERT INTO account (${params.columns()})
