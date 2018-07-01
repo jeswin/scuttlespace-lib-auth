@@ -1,13 +1,13 @@
 {
   "name": "scuttlespace-service-auth",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "main": "dist/index",
   "scripts": {
     "build": "./build.sh",
     "test": "./build.sh && mocha dist/test/test.js"
   },
-  "license": "AGPL",
+  "license": "AGPL-1.0",
   "dependencies": {
     "@types/node": "^10.3.2",
     "@types/pg": "^7.4.9",
