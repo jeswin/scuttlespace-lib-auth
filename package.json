@@ -1,6 +1,6 @@
 {
   "name": "scuttlespace-service-auth",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "main": "dist/index",
   "scripts": {
@@ -12,8 +12,7 @@
     "@types/node": "^10.3.2",
     "@types/pg": "^7.4.9",
     "pg": "^7.4.3",
-    "psychopiggy": "^0.0.2",
-    "scuttlespace-service-auth": "^0.0.1"
+    "psychopiggy": "^0.0.2"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",
