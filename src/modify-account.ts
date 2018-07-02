@@ -1,8 +1,13 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import exception from "./exception";
+import { ICallContext } from "./types";
 
-async function ensureAccountExists(networkId: string, pool: pg.Pool) {
+async function ensureAccountExists(
+  networkId: string,
+  pool: pg.Pool,
+  context: ICallContext
+) {
   const params = new psy.Params({ network_id: networkId });
   const { rows: existing } = await pool.query(
     `
@@ -11,16 +16,21 @@ async function ensureAccountExists(networkId: string, pool: pg.Pool) {
     params.values()
   );
   if (existing.length === 0) {
-    exception(`The user ${networkId} does not exist.`);
+    exception(
+      "USER_NOT_FOUND",
+      `The user ${networkId} does not exist.`,
+      context.trace
+    );
   }
 }
 
 export async function editAbout(
   about: string,
   networkId: string,
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<void> {
-  await ensureAccountExists(networkId, pool);
+  await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ about, network_id: networkId });
   await pool.query(
     `
@@ -34,9 +44,10 @@ export async function editAbout(
 export async function editDomain(
   domain: string,
   networkId: string,
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<void> {
-  await ensureAccountExists(networkId, pool);
+  await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ domain, network_id: networkId });
   await pool.query(
     `
@@ -50,9 +61,10 @@ export async function editDomain(
 export async function editUsername(
   username: string,
   networkId: string,
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<void> {
-  await ensureAccountExists(networkId, pool);
+  await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ username, network_id: networkId });
   await pool.query(
     `
@@ -63,8 +75,12 @@ export async function editUsername(
   );
 }
 
-export async function enable(networkId: string, pool: pg.Pool): Promise<void> {
-  await ensureAccountExists(networkId, pool);
+export async function enable(
+  networkId: string,
+  pool: pg.Pool,
+  context: ICallContext
+): Promise<void> {
+  await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ network_id: networkId });
   await pool.query(
     `UPDATE account SET enabled=true WHERE network_id=${params.id(
@@ -74,8 +90,12 @@ export async function enable(networkId: string, pool: pg.Pool): Promise<void> {
   );
 }
 
-export async function disable(networkId: string, pool: pg.Pool): Promise<void> {
-  await ensureAccountExists(networkId, pool);
+export async function disable(
+  networkId: string,
+  pool: pg.Pool,
+  context: ICallContext
+): Promise<void> {
+  await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ network_id: networkId });
   await pool.query(
     `UPDATE account SET enabled=false WHERE network_id=${params.id(
@@ -85,8 +105,12 @@ export async function disable(networkId: string, pool: pg.Pool): Promise<void> {
   );
 }
 
-export async function destroy(networkId: string, pool: pg.Pool): Promise<void> {
-  await ensureAccountExists(networkId, pool);
+export async function destroy(
+  networkId: string,
+  pool: pg.Pool,
+  context: ICallContext
+): Promise<void> {
+  await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ network_id: networkId });
   const { rows } = await pool.query(
     `SELECT * FROM account WHERE network_id=${params.id("network_id")}`,
@@ -98,6 +122,10 @@ export async function destroy(networkId: string, pool: pg.Pool): Promise<void> {
       params.values()
     );
   } else {
-    exception(`An account in active status cannot be deleted.`);
+    exception(
+      "CANNOT_DELETE_ACTIVE_ACCOUNT",
+      `An account in active status cannot be deleted.`,
+      context.trace
+    );
   }
 }

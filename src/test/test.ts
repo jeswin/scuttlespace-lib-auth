@@ -37,6 +37,10 @@ interface IDbConfig {
   user: string;
 }
 
+function getCallContext() {
+  return { trace: "TEST_RUN" };
+}
+
 async function recreateDb(config: IDbConfig) {
   const pool = new pg.Pool({ ...config, database: "template1" });
 
@@ -123,7 +127,7 @@ describe("auth", () => {
 
   it("returns account status as 'AVAILABLE' if username does not exist", async () => {
     const pool = psy.getPool(dbConfig);
-    await auth.checkAccountStatus("jeswin", "jpk001", pool);
+    await auth.checkAccountStatus("jeswin", "jpk001", pool, getCallContext());
   });
 
   it("returns account status as 'OWN' if username belongs to user", async () => {
@@ -144,7 +148,12 @@ describe("auth", () => {
       params.values()
     );
 
-    const result = await auth.checkAccountStatus("jeswin", "jpk001", pool);
+    const result = await auth.checkAccountStatus(
+      "jeswin",
+      "jpk001",
+      pool,
+      getCallContext()
+    );
     result.status.should.equal("OWN");
   });
 
@@ -155,7 +164,12 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.checkAccountStatus("jeswin", "alice001", pool);
+    const result = await auth.checkAccountStatus(
+      "jeswin",
+      "alice001",
+      pool,
+      getCallContext()
+    );
     result.status.should.equal("TAKEN");
   });
 
@@ -166,7 +180,11 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.getAccountForCaller("jpk001", pool);
+    const result = await auth.getAccountForCaller(
+      "jpk001",
+      pool,
+      getCallContext()
+    );
     shouldLib.exist(result);
     (result as any).should.deepEqual({
       networkId: "jpk001",
@@ -181,7 +199,11 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.getAccountForCaller("boom1", pool);
+    const result = await auth.getAccountForCaller(
+      "boom1",
+      pool,
+      getCallContext()
+    );
     shouldLib.not.exist(result);
   });
 
@@ -192,7 +214,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    await auth.editAbout("Hello world", "jpk001", pool);
+    await auth.editAbout("Hello world", "jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE network_id='jpk001'`
@@ -209,7 +231,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    await auth.editDomain("jeswin.org", "jpk001", pool);
+    await auth.editDomain("jeswin.org", "jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE network_id='jpk001'`
@@ -226,7 +248,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    await auth.editUsername("furiosan", "jpk001", pool);
+    await auth.editUsername("furiosan", "jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE network_id='jpk001'`
@@ -243,7 +265,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser({ ...user1, enabled: false }, pool);
-    await auth.enable("jpk001", pool);
+    await auth.enable("jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE network_id='jpk001'`
@@ -260,7 +282,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    await auth.disable("jpk001", pool);
+    await auth.disable("jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE network_id='jpk001'`
@@ -277,7 +299,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser({ ...user1, enabled: false }, pool);
-    await auth.destroy("jpk001", pool);
+    await auth.destroy("jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE network_id='jpk001'`
@@ -296,11 +318,13 @@ describe("auth", () => {
 
     let ex: any;
     try {
-      await auth.destroy("jpk001", pool);
+      await auth.destroy("jpk001", pool, getCallContext());
     } catch (e) {
       ex = e;
     }
-    ex.message.should.equal("An account in active status cannot be deleted.");
+    ex.message.should.equal(
+      "CANNOT_DELETE_ACTIVE_ACCOUNT(TEST_RUN): An account in active status cannot be deleted."
+    );
   });
 
   it("creates a new account", async () => {
@@ -316,7 +340,7 @@ describe("auth", () => {
       networkId: "jpk001",
       username: "jeswin"
     };
-    await auth.createAccount(accountInfo, pool);
+    await auth.createAccount(accountInfo, pool, getCallContext());
 
     const { rows } = await pool.query(`SELECT * FROM account`);
     rows.length.should.equal(1);
@@ -333,7 +357,14 @@ describe("auth", () => {
     await insertUser(user1, pool);
     await insertUser(user2, pool);
 
-    await auth.addPermissions("jeswin", "gp001", "jpk001", ["write"], pool);
+    await auth.addPermissions(
+      "jeswin",
+      "gp001",
+      "jpk001",
+      ["write"],
+      pool,
+      getCallContext()
+    );
 
     const { rows } = await pool.query(`SELECT * FROM account_permissions`);
     rows.length.should.equal(1);
@@ -359,13 +390,20 @@ describe("auth", () => {
     let message: string = "";
 
     try {
-      await auth.addPermissions("jeswin", "gp001", "bond001", ["write"], pool);
+      await auth.addPermissions(
+        "jeswin",
+        "gp001",
+        "bond001",
+        ["write"],
+        pool,
+        getCallContext()
+      );
     } catch (ex) {
       message = ex.message;
     }
 
     message.should.equal(
-      "bond001 cannot manage permissions for username jeswin."
+      "NO_MANAGE_PERMISSION(TEST_RUN): bond001 cannot manage permissions for username jeswin."
     );
   });
 
@@ -385,7 +423,8 @@ describe("auth", () => {
       "gp001",
       "jpk001",
       ["read", "write"],
-      pool
+      pool,
+      getCallContext()
     );
 
     const { rows } = await pool.query(`SELECT * FROM account_permissions`);

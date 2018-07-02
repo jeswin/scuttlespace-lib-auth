@@ -1,5 +1,6 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
+import { ICallContext } from "./types";
 
 export interface ICreateAccountArgs {
   about: string;
@@ -11,7 +12,8 @@ export interface ICreateAccountArgs {
 
 export default async function createAccount(
   accountInfo: ICreateAccountArgs,
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<void> {
   const params = new psy.Params({
     about: accountInfo.about,

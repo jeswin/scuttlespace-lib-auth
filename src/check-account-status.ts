@@ -1,6 +1,7 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import * as errors from "./errors";
+import { ICallContext } from "./types";
 
 export type AccountStatusCheckResult =
   | { status: "AVAILABLE" }
@@ -10,7 +11,8 @@ export type AccountStatusCheckResult =
 export default async function checkAccountStatus(
   username: string,
   callerNetworkId: string,
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<AccountStatusCheckResult> {
   const params = new psy.Params({ username });
   const { rows } = await pool.query(

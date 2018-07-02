@@ -2,13 +2,15 @@ import pg = require("pg");
 import * as psy from "psychopiggy";
 import * as errors from "./errors";
 import exception from "./exception";
+import { ICallContext } from "./types";
 
 export default async function addPermissions(
   username: string,
   assigneeNetworkId: string,
   callerNetworkId: string,
   permissions: string[],
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<void> {
   const accountQueryParams = new psy.Params({
     network_id: callerNetworkId,
@@ -72,7 +74,9 @@ export default async function addPermissions(
     }
   } else if (accountRows.length === 0) {
     exception(
-      `${callerNetworkId} cannot manage permissions for username ${username}.`
+      "NO_MANAGE_PERMISSION",
+      `${callerNetworkId} cannot manage permissions for username ${username}.`,
+      context.trace
     );
   } else {
     errors.singleOrNone(accountRows);

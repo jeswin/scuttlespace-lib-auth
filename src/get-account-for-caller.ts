@@ -1,6 +1,7 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import * as errors from "./errors";
+import { ICallContext } from "./types";
 
 export interface IGetAccountForCallerResult {
   networkId: string;
@@ -9,7 +10,8 @@ export interface IGetAccountForCallerResult {
 
 export default async function getAccountForCaller(
   callerNetworkId: string,
-  pool: pg.Pool
+  pool: pg.Pool,
+  context: ICallContext
 ): Promise<IGetAccountForCallerResult | void> {
   const params = new psy.Params({ network_id: callerNetworkId });
   const { rows } = await pool.query(
