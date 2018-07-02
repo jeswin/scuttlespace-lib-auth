@@ -5,6 +5,8 @@ import "should";
 import * as auth from "../";
 import setup from "../setup";
 
+const shouldLib = require("should");
+
 /* tslint:disable */
 if (
   !process.env.NODE_ENV ||
@@ -155,6 +157,21 @@ describe("auth", () => {
     await insertUser(user1, pool);
     const result = await auth.checkAccountStatus("jeswin", "alice001", pool);
     result.status.should.equal("TAKEN");
+  });
+
+  it("gets account details of caller", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    const result = await auth.getAccountForCaller("jpk001", pool);
+    shouldLib.exist(result);
+    (result as any).should.deepEqual({
+      networkId: "jpk001",
+      username: "jeswin"
+    });
   });
 
   it("creates a new account", async () => {
