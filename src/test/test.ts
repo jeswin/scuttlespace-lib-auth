@@ -185,6 +185,91 @@ describe("auth", () => {
     shouldLib.not.exist(result);
   });
 
+  it("sets the about", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    await auth.editAbout("Hello world", "jpk001", pool);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM account WHERE network_id='jpk001'`
+    );
+
+    rows.length.should.equal(1);
+    rows[0].about.should.equal("Hello world");
+  });
+
+  it("sets the domain", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    await auth.editDomain("jeswin.org", "jpk001", pool);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM account WHERE network_id='jpk001'`
+    );
+
+    rows.length.should.equal(1);
+    rows[0].domain.should.equal("jeswin.org");
+  });
+
+  it("changes the username", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    await auth.editUsername("furiosan", "jpk001", pool);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM account WHERE network_id='jpk001'`
+    );
+
+    rows.length.should.equal(1);
+    rows[0].username.should.be.equal("furiosan");
+  });
+
+  it("enables", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser({ ...user1, enabled: false }, pool);
+    await auth.enable("jpk001", pool);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM account WHERE network_id='jpk001'`
+    );
+
+    rows.length.should.equal(1);
+    rows[0].enabled.should.be.true();
+  });
+
+  it("disables", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    await auth.disable("jpk001", pool);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM account WHERE network_id='jpk001'`
+    );
+
+    rows.length.should.equal(1);
+    rows[0].enabled.should.be.false();
+  });
+
   it("creates a new account", async () => {
     const pool = psy.getPool(dbConfig);
 
