@@ -270,6 +270,22 @@ describe("auth", () => {
     rows[0].enabled.should.be.false();
   });
 
+  it("destroys", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    await auth.destroy("jpk001", pool);
+
+    const { rows } = await pool.query(
+      `SELECT * FROM account WHERE network_id='jpk001'`
+    );
+
+    rows.length.should.equal(0);
+  });
+
   it("creates a new account", async () => {
     const pool = psy.getPool(dbConfig);
 

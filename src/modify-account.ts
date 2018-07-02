@@ -65,3 +65,11 @@ export async function disable(sender: string, pool: pg.Pool): Promise<void> {
     params.values()
   );
 }
+
+export async function destroy(sender: string, pool: pg.Pool): Promise<void> {
+  const params = new psy.Params({ network_id: sender });
+  await pool.query(
+    `DELETE FROM account WHERE network_id=${params.id("network_id")}`,
+    params.values()
+  );
+}
