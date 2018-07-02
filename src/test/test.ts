@@ -276,7 +276,7 @@ describe("auth", () => {
     // clean up
     await pool.query(`DELETE FROM account`);
 
-    await insertUser(user1, pool);
+    await insertUser({ ...user1, enabled: false }, pool);
     await auth.destroy("jpk001", pool);
 
     const { rows } = await pool.query(
@@ -284,6 +284,23 @@ describe("auth", () => {
     );
 
     rows.length.should.equal(0);
+  });
+
+  it("does not destroy if account status is active", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+
+    let ex: any;
+    try {
+      await auth.destroy("jpk001", pool);
+    } catch (e) {
+      ex = e;
+    }
+    ex.message.should.equal("An account in active status cannot be deleted.");
   });
 
   it("creates a new account", async () => {
@@ -304,21 +321,6 @@ describe("auth", () => {
     const { rows } = await pool.query(`SELECT * FROM account`);
     rows.length.should.equal(1);
     rows[0].about.should.equal("hal9000 supervisor (deceased)");
-  });
-
-  it("renames a username", async () => {
-    const pool = psy.getPool(dbConfig);
-
-    // clean up
-    await pool.query(`DELETE FROM account`);
-
-    await insertUser(user1, pool);
-
-    await auth.changeUsername("jeswin", "hal9kop", "jpk001", pool);
-
-    const { rows } = await pool.query(`SELECT * FROM account`);
-    rows.length.should.equal(1);
-    rows[0].username.should.equal("hal9kop");
   });
 
   it("adds new permissions", async () => {

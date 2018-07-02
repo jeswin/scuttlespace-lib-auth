@@ -70,12 +70,6 @@ export default async function addPermissions(
     } else {
       errors.singleOrNone(permissionsRows);
     }
-
-    // const { rows: existing } = await pool.query(`
-    // SELECT * FROM account
-    // WHERE
-    //   username = ${existingParams.id("username")} AND
-    //   network_id = ${existingParams.id("network_id")}`);
   } else if (accountRows.length === 0) {
     exception(
       `${callerNetworkId} cannot manage permissions for username ${username}.`
