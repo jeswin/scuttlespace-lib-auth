@@ -174,6 +174,17 @@ describe("auth", () => {
     });
   });
 
+  it("gets no account details of caller if account missing", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    const result = await auth.getAccountForCaller("boom1", pool);
+    shouldLib.not.exist(result);
+  });
+
   it("creates a new account", async () => {
     const pool = psy.getPool(dbConfig);
 
