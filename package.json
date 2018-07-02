@@ -1,8 +1,9 @@
 {
   "name": "scuttlespace-service-auth",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "main": "dist/index",
+  "types": "dist/index.d.ts",
   "scripts": {
     "build": "./build.sh",
     "test": "./build.sh && mocha dist/test/test.js"
