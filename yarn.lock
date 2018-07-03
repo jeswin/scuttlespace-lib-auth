@@ -280,6 +280,10 @@ split@^1.0.0:
   dependencies:
     through "2"
 
+standard-api@^0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/standard-api/-/standard-api-0.0.1.tgz#29dea8dd6900d808cef917d88c6ef4f1dedb2ec1"
+
 supports-color@4.4.0:
   version "4.4.0"
   resolved "https://registry.yarnpkg.com/supports-color/-/supports-color-4.4.0.tgz#883f7ddabc165142b2a61427f3352ded195d1a3e"

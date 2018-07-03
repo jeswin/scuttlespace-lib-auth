@@ -13,7 +13,8 @@
     "@types/node": "^10.3.2",
     "@types/pg": "^7.4.9",
     "pg": "^7.4.3",
-    "psychopiggy": "^0.0.2"
+    "psychopiggy": "^0.0.2",
+    "standard-api": "^0.0.1"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.0",

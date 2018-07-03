@@ -1,12 +1,12 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import exception from "./exception";
-import { ICallContext } from "./types";
+import { IAPICallContext } from "./types";
 
 async function ensureAccountExists(
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ) {
   const params = new psy.Params({ network_id: networkId });
   const { rows: existing } = await pool.query(
@@ -28,7 +28,7 @@ export async function editAbout(
   about: string,
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ): Promise<void> {
   await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ about, network_id: networkId });
@@ -45,7 +45,7 @@ export async function editDomain(
   domain: string,
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ): Promise<void> {
   await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ domain, network_id: networkId });
@@ -62,7 +62,7 @@ export async function editUsername(
   username: string,
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ): Promise<void> {
   await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ username, network_id: networkId });
@@ -78,7 +78,7 @@ export async function editUsername(
 export async function enable(
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ): Promise<void> {
   await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ network_id: networkId });
@@ -93,7 +93,7 @@ export async function enable(
 export async function disable(
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ): Promise<void> {
   await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ network_id: networkId });
@@ -108,7 +108,7 @@ export async function disable(
 export async function destroy(
   networkId: string,
   pool: pg.Pool,
-  context: ICallContext
+  context: IAPICallContext
 ): Promise<void> {
   await ensureAccountExists(networkId, pool, context);
   const params = new psy.Params({ network_id: networkId });

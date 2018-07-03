@@ -1,8 +1,9 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
+import { IAPICallContext, APIResult } from "standard-api";
 import * as errors from "./errors";
 import exception from "./exception";
-import { ICallContext } from "./types";
+import { ScuttleSpaceAPIResult } from "./types";
 
 export default async function addPermissions(
   username: string,
@@ -10,8 +11,8 @@ export default async function addPermissions(
   callerNetworkId: string,
   permissions: string[],
   pool: pg.Pool,
-  context: ICallContext
-): Promise<void> {
+  context: IAPICallContext
+): Promise<ScuttleSpaceAPIResult<string>> {
   const accountQueryParams = new psy.Params({
     network_id: callerNetworkId,
     username
@@ -52,6 +53,10 @@ export default async function addPermissions(
       `,
         insertionParams.values()
       );
+      return {
+        data: `Added permissions for ${username}`,
+        type: "data"
+      };
     } else if (permissionsRows.length === 1) {
       const updationParams = new psy.Params({
         network_id: assigneeNetworkId,
@@ -69,15 +74,21 @@ export default async function addPermissions(
       `,
         updationParams.values()
       );
+      return {
+        data: `Updated permissions for ${username}`,
+        type: "data"
+      };
     } else {
       errors.singleOrNone(permissionsRows);
     }
   } else if (accountRows.length === 0) {
-    exception(
-      "NO_MANAGE_PERMISSION",
-      `${callerNetworkId} cannot manage permissions for username ${username}.`,
-      context.trace
-    );
+    return {
+      error: {
+        code: "NO_MANAGE_PERMISSION",
+        message: `${callerNetworkId} cannot manage permissions for username ${username}.`
+      },
+      type: "error"
+    };
   } else {
     errors.singleOrNone(accountRows);
   }
