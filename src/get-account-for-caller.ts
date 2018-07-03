@@ -1,9 +1,6 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
-import {
-  ScuttleSpaceAPIData,
-  ScuttleSpaceAPIResult
-} from "scuttlespace-api-common";
+import { ServiceResult, ValidResult } from "scuttlespace-api-common";
 import { IAPICallContext } from "standard-api";
 import * as errors from "./errors";
 
@@ -16,7 +13,7 @@ export default async function getAccountForCaller(
   callerNetworkId: string,
   pool: pg.Pool,
   context: IAPICallContext
-): Promise<ScuttleSpaceAPIData<IGetAccountForCallerResult | undefined>> {
+): Promise<ServiceResult<IGetAccountForCallerResult | undefined>> {
   const params = new psy.Params({ network_id: callerNetworkId });
   const { rows } = await pool.query(
     `SELECT * FROM account
@@ -32,5 +29,5 @@ export default async function getAccountForCaller(
         }
       : undefined;
 
-  return new ScuttleSpaceAPIData(result);
+  return new ValidResult(result);
 }

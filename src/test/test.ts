@@ -1,10 +1,6 @@
 import "mocha";
 import pg = require("pg");
 import * as psy from "psychopiggy";
-import {
-  ScuttleSpaceAPIData,
-  ScuttleSpaceAPIResult
-} from "scuttlespace-api-common";
 import "should";
 import * as auth from "../";
 import setup from "../setup";
@@ -216,7 +212,7 @@ describe("auth", () => {
       pool,
       getCallContext()
     );
-    shouldLib.not.exist(result.data);
+    shouldLib.not.exist((result as any).data);
   });
 
   it("sets the about", async () => {
