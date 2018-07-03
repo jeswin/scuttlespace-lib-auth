@@ -1,6 +1,10 @@
 import "mocha";
 import pg = require("pg");
 import * as psy from "psychopiggy";
+import {
+  ScuttleSpaceAPIData,
+  ScuttleSpaceAPIResult
+} from "scuttlespace-api-common";
 import "should";
 import * as auth from "../";
 import setup from "../setup";
@@ -38,7 +42,7 @@ interface IDbConfig {
 }
 
 function getCallContext() {
-  return { trace: "TEST_RUN" };
+  return { id: "TEST_RUN" };
 }
 
 async function recreateDb(config: IDbConfig) {
@@ -154,7 +158,11 @@ describe("auth", () => {
       pool,
       getCallContext()
     );
-    result.status.should.equal("OWN");
+
+    result.type.should.equal("data");
+    if (result.type === "data") {
+      result.data.status.should.equal("OWN");
+    }
   });
 
   it("returns account status as 'TAKEN' if username belongs to user", async () => {
@@ -170,7 +178,11 @@ describe("auth", () => {
       pool,
       getCallContext()
     );
-    result.status.should.equal("TAKEN");
+
+    result.type.should.equal("data");
+    if (result.type === "data") {
+      result.data.status.should.equal("TAKEN");
+    }
   });
 
   it("gets account details of caller", async () => {
@@ -186,7 +198,7 @@ describe("auth", () => {
       getCallContext()
     );
     shouldLib.exist(result);
-    (result as any).should.deepEqual({
+    (result as any).data.should.deepEqual({
       networkId: "jpk001",
       username: "jeswin"
     });
@@ -204,7 +216,7 @@ describe("auth", () => {
       pool,
       getCallContext()
     );
-    shouldLib.not.exist(result);
+    shouldLib.not.exist(result.data);
   });
 
   it("sets the about", async () => {
@@ -316,15 +328,14 @@ describe("auth", () => {
 
     await insertUser(user1, pool);
 
-    let ex: any;
-    try {
-      await auth.destroy("jpk001", pool, getCallContext());
-    } catch (e) {
-      ex = e;
+    const result = await auth.destroy("jpk001", pool, getCallContext());
+    result.type.should.equal("error");
+    if (result.type === "error") {
+      result.error.code.should.equal("CANNOT_DELETE_ACTIVE_ACCOUNT");
+      result.error.message.should.equal(
+        "An account in active status cannot be deleted."
+      );
     }
-    ex.message.should.equal(
-      "CANNOT_DELETE_ACTIVE_ACCOUNT(TEST_RUN): An account in active status cannot be deleted."
-    );
   });
 
   it("creates a new account", async () => {
@@ -387,24 +398,22 @@ describe("auth", () => {
     await insertUser(user1, pool);
     await insertUser(user2, pool);
 
-    let message: string = "";
-
-    try {
-      await auth.addPermissions(
-        "jeswin",
-        "gp001",
-        "bond001",
-        ["write"],
-        pool,
-        getCallContext()
-      );
-    } catch (ex) {
-      message = ex.message;
-    }
-
-    message.should.equal(
-      "NO_MANAGE_PERMISSION(TEST_RUN): bond001 cannot manage permissions for username jeswin."
+    const result = await auth.addPermissions(
+      "jeswin",
+      "gp001",
+      "bond001",
+      ["write"],
+      pool,
+      getCallContext()
     );
+
+    result.type.should.equal("error");
+    if (result.type === "error") {
+      result.error.code.should.equal("NO_MANAGE_PERMISSION");
+      result.error.message.should.equal(
+        "bond001 cannot manage permissions for username jeswin."
+      );
+    }
   });
 
   it("updates permissions", async () => {

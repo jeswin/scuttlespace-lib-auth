@@ -232,6 +232,12 @@ psychopiggy@^0.0.2:
     pg "^7.4.3"
     pg-params "^0.0.6"
 
+scuttlespace-api-common@^0.0.2:
+  version "0.0.2"
+  resolved "https://registry.yarnpkg.com/scuttlespace-api-common/-/scuttlespace-api-common-0.0.2.tgz#c0ce97c7e1383d338f1c9c7ab5ca8101c0ad0714"
+  dependencies:
+    standard-api "^0.0.1"
+
 semver@4.3.2:
   version "4.3.2"
   resolved "https://registry.yarnpkg.com/semver/-/semver-4.3.2.tgz#c7a07158a80bedd052355b770d82d6640f803be7"
