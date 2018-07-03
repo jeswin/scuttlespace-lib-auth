@@ -1,7 +1,6 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
-import { ServiceResult, ValidResult } from "scuttlespace-api-common";
-import { IAPICallContext } from "standard-api";
+import { ICallContext, ServiceResult, ValidResult } from "scuttlespace-api-common";
 import * as errors from "./errors";
 
 export default async function addPermissions(
@@ -10,7 +9,7 @@ export default async function addPermissions(
   callerNetworkId: string,
   permissions: string[],
   pool: pg.Pool,
-  context: IAPICallContext
+  context: ICallContext
 ): Promise<ServiceResult<void>> {
   const accountQueryParams = new psy.Params({
     network_id: callerNetworkId,

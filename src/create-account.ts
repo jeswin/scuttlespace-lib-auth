@@ -1,7 +1,6 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
-import { ServiceResult, ValidResult } from "scuttlespace-api-common";
-import { IAPICallContext } from "standard-api";
+import { ICallContext, ServiceResult, ValidResult } from "scuttlespace-api-common";
 
 export interface ICreateAccountArgs {
   about: string;
@@ -14,7 +13,7 @@ export interface ICreateAccountArgs {
 export default async function createAccount(
   accountInfo: ICreateAccountArgs,
   pool: pg.Pool,
-  context: IAPICallContext
+  context: ICallContext
 ): Promise<ServiceResult<void>> {
   const params = new psy.Params({
     about: accountInfo.about,

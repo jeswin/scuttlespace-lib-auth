@@ -1,7 +1,6 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
-import { ServiceResult, ValidResult } from "scuttlespace-api-common";
-import { IAPICallContext } from "standard-api";
+import { ICallContext, ServiceResult, ValidResult } from "scuttlespace-api-common";
 import * as errors from "./errors";
 
 export type AccountStatusCheckResult =
@@ -13,7 +12,7 @@ export default async function checkAccountStatus(
   username: string,
   callerNetworkId: string,
   pool: pg.Pool,
-  context: IAPICallContext
+  context: ICallContext
 ): Promise<ServiceResult<AccountStatusCheckResult>> {
   const params = new psy.Params({ username });
   const { rows } = await pool.query(

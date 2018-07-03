@@ -232,9 +232,9 @@ psychopiggy@^0.0.2:
     pg "^7.4.3"
     pg-params "^0.0.6"
 
-scuttlespace-api-common@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/scuttlespace-api-common/-/scuttlespace-api-common-0.0.3.tgz#ed5d44e95a220a7d9da8ab0ee59891b673f16de6"
+scuttlespace-api-common@^0.0.4:
+  version "0.0.4"
+  resolved "https://registry.yarnpkg.com/scuttlespace-api-common/-/scuttlespace-api-common-0.0.4.tgz#daedb48e3c07501b81d321c646173bf8801f3b84"
   dependencies:
     standard-api "^0.0.2"
 
@@ -285,10 +285,6 @@ split@^1.0.0:
   resolved "https://registry.yarnpkg.com/split/-/split-1.0.1.tgz#605bd9be303aa59fb35f9229fbea0ddec9ea07d9"
   dependencies:
     through "2"
-
-standard-api@^0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/standard-api/-/standard-api-0.0.1.tgz#29dea8dd6900d808cef917d88c6ef4f1dedb2ec1"
 
 standard-api@^0.0.2:
   version "0.0.2"
