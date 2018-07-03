@@ -7,8 +7,11 @@ export {
   AccountStatusCheckResult
 } from "./check-account-status";
 
-export { default as createAccount } from "./create-account";
+export { default as createOrRename } from "./create-account";
 
-export { default as getAccountForCaller } from "./get-account-for-caller";
+export {
+  getAccountByNetworkId,
+  getAccountByUsername
+} from "./get-account-by-network-id";
 
 export * from "./modify-account";

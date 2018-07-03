@@ -181,20 +181,45 @@ describe("auth", () => {
     }
   });
 
-  it("gets account details of caller", async () => {
+  it("gets account details by network_id", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.getAccountForCaller(
+    const result = await auth.getAccountByNetworkId(
       "jpk001",
       pool,
       getCallContext()
     );
     shouldLib.exist(result);
     (result as any).data.should.deepEqual({
+      about: "hal9000 supervisor",
+      domain: "jeswin.org",
+      enabled: true,
+      networkId: "jpk001",
+      username: "jeswin"
+    });
+  });
+
+  it("gets account details by username", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    const result = await auth.getAccountByUsername(
+      "jeswin",
+      pool,
+      getCallContext()
+    );
+    shouldLib.exist(result);
+    (result as any).data.should.deepEqual({
+      about: "hal9000 supervisor",
+      domain: "jeswin.org",
+      enabled: true,
       networkId: "jpk001",
       username: "jeswin"
     });
@@ -207,7 +232,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.getAccountForCaller(
+    const result = await auth.getAccountByNetworkId(
       "boom1",
       pool,
       getCallContext()
@@ -341,17 +366,45 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     const accountInfo = {
-      about: "hal9000 supervisor (deceased)",
-      domain: "jeswin.org",
-      enabled: true,
       networkId: "jpk001",
       username: "jeswin"
     };
-    await auth.createAccount(accountInfo, pool, getCallContext());
+    const result = await auth.createOrRename(
+      accountInfo,
+      pool,
+      getCallContext()
+    );
+    result.type.should.equal("data");
+    (result as any).data.should.equal("CREATED");
 
     const { rows } = await pool.query(`SELECT * FROM account`);
     rows.length.should.equal(1);
-    rows[0].about.should.equal("hal9000 supervisor (deceased)");
+    rows[0].username.should.equal("jeswin");
+  });
+
+  it("renames if account exists", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+
+    const accountInfo = {
+      networkId: "jpk001",
+      username: "jes"
+    };
+    const result = await auth.createOrRename(
+      accountInfo,
+      pool,
+      getCallContext()
+    );
+    result.type.should.equal("data");
+    (result as any).data.should.equal("RENAMED");
+
+    const { rows } = await pool.query(`SELECT * FROM account`);
+    rows.length.should.equal(1);
+    rows[0].username.should.equal("jes");
   });
 
   it("adds new permissions", async () => {
