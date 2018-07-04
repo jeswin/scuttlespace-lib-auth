@@ -10,7 +10,7 @@ export type AccountStatusCheckResult =
 
 export default async function checkAccountStatus(
   username: string,
-  callerNetworkId: string,
+  callerExternalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<AccountStatusCheckResult>> {
@@ -28,7 +28,7 @@ export default async function checkAccountStatus(
       ? { status: "AVAILABLE" }
       : rows.length > 1
         ? errors.singleOrNone(rows)
-        : rows[0].network_id === callerNetworkId
+        : rows[0].external_username === callerExternalUsername
           ? { status: "OWN" }
           : { status: "TAKEN" };
 

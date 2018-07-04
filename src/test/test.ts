@@ -80,7 +80,7 @@ const user1 = {
   about: "hal9000 supervisor",
   domain: "jeswin.org",
   enabled: true,
-  network_id: "jpk001",
+  external_username: "jpk001",
   username: "jeswin"
 };
 
@@ -88,7 +88,7 @@ const user2 = {
   about: "bazinga!",
   domain: "example.com",
   enabled: true,
-  network_id: "gp001",
+  external_username: "gp001",
   username: "geospeed"
 };
 
@@ -101,7 +101,7 @@ async function insertUser(user: any, pool: pg.Pool) {
 }
 
 const permissions1 = {
-  network_id: "gp001",
+  external_username: "gp001",
   permissions: "write",
   username: "jeswin"
 };
@@ -140,7 +140,7 @@ describe("auth", () => {
       about: "hal9000 supervisor",
       domain: "jeswin.org",
       enabled: true,
-      network_id: "jpk001",
+      external_username: "jpk001",
       username: "jeswin"
     });
     await pool.query(
@@ -181,14 +181,14 @@ describe("auth", () => {
     }
   });
 
-  it("gets account details by network_id", async () => {
+  it("gets account details by external_username", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.getAccountByNetworkId(
+    const result = await auth.getAccountByExternalUsername(
       "jpk001",
       pool,
       getCallContext()
@@ -198,7 +198,7 @@ describe("auth", () => {
       about: "hal9000 supervisor",
       domain: "jeswin.org",
       enabled: true,
-      networkId: "jpk001",
+      externalUsername: "jpk001",
       username: "jeswin"
     });
   });
@@ -220,7 +220,7 @@ describe("auth", () => {
       about: "hal9000 supervisor",
       domain: "jeswin.org",
       enabled: true,
-      networkId: "jpk001",
+      externalUsername: "jpk001",
       username: "jeswin"
     });
   });
@@ -232,7 +232,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    const result = await auth.getAccountByNetworkId(
+    const result = await auth.getAccountByExternalUsername(
       "boom1",
       pool,
       getCallContext()
@@ -250,7 +250,7 @@ describe("auth", () => {
     await auth.editAbout("Hello world", "jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
-      `SELECT * FROM account WHERE network_id='jpk001'`
+      `SELECT * FROM account WHERE external_username='jpk001'`
     );
 
     rows.length.should.equal(1);
@@ -267,7 +267,7 @@ describe("auth", () => {
     await auth.editDomain("jeswin.org", "jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
-      `SELECT * FROM account WHERE network_id='jpk001'`
+      `SELECT * FROM account WHERE external_username='jpk001'`
     );
 
     rows.length.should.equal(1);
@@ -284,7 +284,7 @@ describe("auth", () => {
     await auth.editUsername("furiosan", "jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
-      `SELECT * FROM account WHERE network_id='jpk001'`
+      `SELECT * FROM account WHERE external_username='jpk001'`
     );
 
     rows.length.should.equal(1);
@@ -301,7 +301,7 @@ describe("auth", () => {
     await auth.enable("jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
-      `SELECT * FROM account WHERE network_id='jpk001'`
+      `SELECT * FROM account WHERE external_username='jpk001'`
     );
 
     rows.length.should.equal(1);
@@ -318,7 +318,7 @@ describe("auth", () => {
     await auth.disable("jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
-      `SELECT * FROM account WHERE network_id='jpk001'`
+      `SELECT * FROM account WHERE external_username='jpk001'`
     );
 
     rows.length.should.equal(1);
@@ -335,7 +335,7 @@ describe("auth", () => {
     await auth.destroy("jpk001", pool, getCallContext());
 
     const { rows } = await pool.query(
-      `SELECT * FROM account WHERE network_id='jpk001'`
+      `SELECT * FROM account WHERE external_username='jpk001'`
     );
 
     rows.length.should.equal(0);
@@ -366,7 +366,7 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     const accountInfo = {
-      networkId: "jpk001",
+      externalUsername: "jpk001",
       username: "jeswin"
     };
     const result = await auth.createOrRename(
@@ -391,7 +391,7 @@ describe("auth", () => {
     await insertUser(user1, pool);
 
     const accountInfo = {
-      networkId: "jpk001",
+      externalUsername: "jpk001",
       username: "jes"
     };
     const result = await auth.createOrRename(
@@ -430,14 +430,14 @@ describe("auth", () => {
     rows.length.should.equal(1);
     rows.should.match([
       {
-        network_id: "gp001",
+        external_username: "gp001",
         permissions: "write",
         username: "jeswin"
       }
     ]);
   });
 
-  it("doesn't add permissions if caller networkId is not matched", async () => {
+  it("doesn't add permissions if caller externalUsername is not matched", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
@@ -489,7 +489,7 @@ describe("auth", () => {
     rows.length.should.equal(1);
     rows.should.match([
       {
-        network_id: "gp001",
+        external_username: "gp001",
         permissions: "read,write",
         username: "jeswin"
       }

@@ -5,14 +5,14 @@ import * as errors from "./errors";
 
 export default async function addPermissions(
   username: string,
-  assigneeNetworkId: string,
-  callerNetworkId: string,
+  assigneeExternalUsername: string,
+  callerExternalUsername: string,
   permissions: string[],
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<void>> {
   const accountQueryParams = new psy.Params({
-    network_id: callerNetworkId,
+    external_username: callerExternalUsername,
     username
   });
   const { rows: accountRows } = await pool.query(
@@ -20,14 +20,14 @@ export default async function addPermissions(
     SELECT * FROM account 
     WHERE 
       username = ${accountQueryParams.id("username")} AND 
-      network_id = ${accountQueryParams.id("network_id")}`,
+      external_username = ${accountQueryParams.id("external_username")}`,
     accountQueryParams.values()
   );
 
   return accountRows.length === 1
     ? await (async () => {
         const permissionsQueryParams = new psy.Params({
-          network_id: assigneeNetworkId,
+          external_username: assigneeExternalUsername,
           username
         });
         const { rows: permissionsRows } = await pool.query(
@@ -35,12 +35,12 @@ export default async function addPermissions(
         SELECT * FROM account_permissions
         WHERE 
           username = ${permissionsQueryParams.id("username")} AND 
-          network_id = ${permissionsQueryParams.id("network_id")}`,
+          external_username = ${permissionsQueryParams.id("external_username")}`,
           permissionsQueryParams.values()
         );
 
         const insertionParams = new psy.Params({
-          network_id: assigneeNetworkId,
+          external_username: assigneeExternalUsername,
           permissions: permissions.join(","),
           username
         });
@@ -59,7 +59,7 @@ export default async function addPermissions(
           : permissionsRows.length === 1
             ? await (async () => {
                 const updationParams = new psy.Params({
-                  network_id: assigneeNetworkId,
+                  external_username: assigneeExternalUsername,
                   permissions: permissions.join(","),
                   username
                 });
@@ -70,7 +70,7 @@ export default async function addPermissions(
                   )}
                   WHERE 
                     username = ${updationParams.id("username")} AND 
-                    network_id = ${updationParams.id("network_id")}
+                    external_username = ${updationParams.id("external_username")}
                 `,
                   updationParams.values()
                 );
@@ -82,7 +82,7 @@ export default async function addPermissions(
       ? {
           error: {
             code: "NO_MANAGE_PERMISSION",
-            message: `${callerNetworkId} cannot manage permissions for username ${username}.`
+            message: `${callerExternalUsername} cannot manage permissions for username ${username}.`
           },
           type: "error"
         }

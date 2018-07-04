@@ -8,148 +8,148 @@ import {
 } from "scuttlespace-api-common";
 
 async function accountExists(
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ) {
-  const params = new psy.Params({ network_id: networkId });
+  const params = new psy.Params({ external_username: externalUsername });
   const { rows: existing } = await pool.query(
     `
     SELECT * FROM account 
-    WHERE network_id=${params.id("network_id")}`,
+    WHERE external_username=${params.id("external_username")}`,
     params.values()
   );
 
   return existing.length === 0;
 }
 
-function getMissingAccountError(networkId: string) {
+function getMissingAccountError(externalUsername: string) {
   return new ErrorResult({
     code: "ACCOUNT_DOES_NOT_EXIST",
-    message: `The user ${networkId} does not exist.`
+    message: `The user ${externalUsername} does not exist.`
   });
 }
 
 export async function editAbout(
   about: string,
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<undefined>> {
-  return accountExists(networkId, pool, context)
+  return accountExists(externalUsername, pool, context)
     ? await (async () => {
-        const params = new psy.Params({ about, network_id: networkId });
+        const params = new psy.Params({ about, external_username: externalUsername });
         await pool.query(
           `
           UPDATE account SET about=${params.id(
             "about"
-          )} WHERE network_id=${params.id("network_id")}`,
+          )} WHERE external_username=${params.id("external_username")}`,
           params.values()
         );
         return new ValidResult(undefined);
       })()
-    : getMissingAccountError(networkId);
+    : getMissingAccountError(externalUsername);
 }
 
 export async function editDomain(
   domain: string,
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<undefined>> {
-  return accountExists(networkId, pool, context)
+  return accountExists(externalUsername, pool, context)
     ? await (async () => {
-        const params = new psy.Params({ domain, network_id: networkId });
+        const params = new psy.Params({ domain, external_username: externalUsername });
         await pool.query(
           `
         UPDATE account SET domain=${params.id(
           "domain"
-        )} WHERE network_id=${params.id("network_id")}`,
+        )} WHERE external_username=${params.id("external_username")}`,
           params.values()
         );
         return new ValidResult(undefined);
       })()
-    : getMissingAccountError(networkId);
+    : getMissingAccountError(externalUsername);
 }
 
 export async function editUsername(
   username: string,
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<undefined>> {
-  return accountExists(networkId, pool, context)
+  return accountExists(externalUsername, pool, context)
     ? await (async () => {
-        const params = new psy.Params({ username, network_id: networkId });
+        const params = new psy.Params({ username, external_username: externalUsername });
         await pool.query(
           `
             UPDATE account SET username=${params.id(
               "username"
-            )} WHERE network_id=${params.id("network_id")}`,
+            )} WHERE external_username=${params.id("external_username")}`,
           params.values()
         );
         return new ValidResult(undefined);
       })()
-    : getMissingAccountError(networkId);
+    : getMissingAccountError(externalUsername);
 }
 
 export async function enable(
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<undefined>> {
-  return accountExists(networkId, pool, context)
+  return accountExists(externalUsername, pool, context)
     ? await (async () => {
-        const params = new psy.Params({ network_id: networkId });
+        const params = new psy.Params({ external_username: externalUsername });
         await pool.query(
-          `UPDATE account SET enabled=true WHERE network_id=${params.id(
-            "network_id"
+          `UPDATE account SET enabled=true WHERE external_username=${params.id(
+            "external_username"
           )}`,
           params.values()
         );
         return new ValidResult(undefined);
       })()
-    : getMissingAccountError(networkId);
+    : getMissingAccountError(externalUsername);
 }
 
 export async function disable(
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<undefined>> {
-  return accountExists(networkId, pool, context)
+  return accountExists(externalUsername, pool, context)
     ? await (async () => {
-        const params = new psy.Params({ network_id: networkId });
+        const params = new psy.Params({ external_username: externalUsername });
         await pool.query(
-          `UPDATE account SET enabled=false WHERE network_id=${params.id(
-            "network_id"
+          `UPDATE account SET enabled=false WHERE external_username=${params.id(
+            "external_username"
           )}`,
           params.values()
         );
         return new ValidResult(undefined);
       })()
-    : getMissingAccountError(networkId);
+    : getMissingAccountError(externalUsername);
 }
 
 export async function destroy(
-  networkId: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<undefined>> {
-  return accountExists(networkId, pool, context)
+  return accountExists(externalUsername, pool, context)
     ? await (async () => {
-        const params = new psy.Params({ network_id: networkId });
+        const params = new psy.Params({ external_username: externalUsername });
 
         const { rows } = await pool.query(
-          `SELECT * FROM account WHERE network_id=${params.id("network_id")}`,
+          `SELECT * FROM account WHERE external_username=${params.id("external_username")}`,
           params.values()
         );
 
         return !rows[0].enabled
           ? await (async () => {
               await pool.query(
-                `DELETE FROM account WHERE network_id=${params.id(
-                  "network_id"
+                `DELETE FROM account WHERE external_username=${params.id(
+                  "external_username"
                 )}`,
                 params.values()
               );
@@ -160,5 +160,5 @@ export async function destroy(
               message: `An account in active status cannot be deleted.`
             });
       })()
-    : getMissingAccountError(networkId);
+    : getMissingAccountError(externalUsername);
 }

@@ -10,8 +10,8 @@ export {
 export { default as createOrRename } from "./create-account";
 
 export {
-  getAccountByNetworkId,
+  getAccountByExternalUsername,
   getAccountByUsername
-} from "./get-account-by-network-id";
+} from "./get-account";
 
 export * from "./modify-account";

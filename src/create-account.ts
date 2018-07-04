@@ -7,7 +7,7 @@ import {
 } from "scuttlespace-api-common";
 
 export interface ICreateOrRenameArgs {
-  networkId: string;
+  externalUsername: string;
   username: string;
 }
 
@@ -22,11 +22,11 @@ export default async function createOrRename(
   context: ICallContext
 ): Promise<ServiceResult<CreateOrRenameResult>> {
   const existingCheckParams = new psy.Params({
-    network_id: accountInfo.networkId
+    external_username: accountInfo.externalUsername
   });
   const { rows } = await pool.query(
-    `SELECT * FROM account WHERE network_id=${existingCheckParams.id(
-      "network_id"
+    `SELECT * FROM account WHERE external_username=${existingCheckParams.id(
+      "external_username"
     )}`,
     existingCheckParams.values()
   );
@@ -34,14 +34,14 @@ export default async function createOrRename(
   return rows.length
     ? await (async () => {
         const params = new psy.Params({
-          network_id: accountInfo.networkId,
+          external_username: accountInfo.externalUsername,
           username: accountInfo.username
         });
 
         await pool.query(
           `UPDATE account SET username=${params.id(
             "username"
-          )} WHERE network_id=${params.id("network_id")}
+          )} WHERE external_username=${params.id("external_username")}
         `,
           params.values()
         );
@@ -53,7 +53,7 @@ export default async function createOrRename(
           about: "",
           domain: "",
           enabled: true,
-          network_id: accountInfo.networkId,
+          external_username: accountInfo.externalUsername,
           username: accountInfo.username
         });
 

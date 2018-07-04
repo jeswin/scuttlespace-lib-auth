@@ -6,33 +6,33 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 
-export interface IGetAccountByNetworkIdResult {
+export interface IGetAccountByExternalUsernameResult {
   about: string;
   domain: string;
   enabled: boolean;
-  networkId: string;
+  externalUsername: string;
   username: string;
 }
 
-export async function getAccountByNetworkId(
-  callerNetworkId: string,
+export async function getAccountByExternalUsername(
+  callerExternalUsername: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<IGetAccountByNetworkIdResult | undefined>> {
-  const params = new psy.Params({ network_id: callerNetworkId });
+): Promise<ServiceResult<IGetAccountByExternalUsernameResult | undefined>> {
+  const params = new psy.Params({ external_username: callerExternalUsername });
   const { rows } = await pool.query(
     `SELECT * FROM account
-     WHERE network_id = ${params.id("network_id")}`,
+     WHERE external_username = ${params.id("external_username")}`,
     params.values()
   );
 
-  const result: IGetAccountByNetworkIdResult | undefined =
+  const result: IGetAccountByExternalUsernameResult | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
-          networkId: callerNetworkId,
+          externalUsername: callerExternalUsername,
           username: rows[0].username
         }
       : undefined;
@@ -44,7 +44,7 @@ export async function getAccountByUsername(
   username: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<IGetAccountByNetworkIdResult | undefined>> {
+): Promise<ServiceResult<IGetAccountByExternalUsernameResult | undefined>> {
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
     `SELECT * FROM account
@@ -52,13 +52,13 @@ export async function getAccountByUsername(
     params.values()
   );
 
-  const result: IGetAccountByNetworkIdResult | undefined =
+  const result: IGetAccountByExternalUsernameResult | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
-          networkId: rows[0].network_id,
+          externalUsername: rows[0].external_username,
           username
         }
       : undefined;
