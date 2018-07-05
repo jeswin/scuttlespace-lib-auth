@@ -4,7 +4,7 @@ export { default as addPermissions } from "./add-permissions";
 
 export {
   default as checkAccountStatus,
-  AccountStatusCheckResult
+  IAccountStatusCheckResult
 } from "./check-account-status";
 
 export { default as createOrRename } from "./create-account";
