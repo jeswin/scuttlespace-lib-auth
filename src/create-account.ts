@@ -1,6 +1,7 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import {
+  ErrorResult,
   ICallContext,
   ServiceResult,
   ValidResult
@@ -13,7 +14,9 @@ export interface ICreateOrRenameArgs {
 
 export enum CreateOrRenameResult {
   Created = "CREATED",
-  Renamed = "RENAMED"
+  Own = "OWN",
+  Renamed = "RENAMED",
+  Taken = "TAKEN"
 }
 
 export default async function createOrRename(
@@ -21,49 +24,82 @@ export default async function createOrRename(
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<CreateOrRenameResult>> {
-  const existingCheckParams = new psy.Params({
-    external_username: accountInfo.externalUsername
-  });
-  const { rows } = await pool.query(
-    `SELECT * FROM account WHERE external_username=${existingCheckParams.id(
-      "external_username"
-    )}`,
-    existingCheckParams.values()
-  );
-
-  return rows.length
+  return isValidUsername(accountInfo.username)
     ? await (async () => {
-        const params = new psy.Params({
-          external_username: accountInfo.externalUsername,
+        const usernameCheckParams = new psy.Params({
           username: accountInfo.username
         });
 
-        await pool.query(
-          `UPDATE account SET username=${params.id(
+        const { rows: usernameRows } = await pool.query(
+          `SELECT * FROM account WHERE username=${usernameCheckParams.id(
             "username"
-          )} WHERE external_username=${params.id("external_username")}
-        `,
-          params.values()
+          )}`,
+          usernameCheckParams.values()
         );
 
-        return new ValidResult(CreateOrRenameResult.Renamed);
+        return usernameRows.length
+          ? new ValidResult(
+              usernameRows[0].external_username === accountInfo.externalUsername
+                ? CreateOrRenameResult.Own
+                : CreateOrRenameResult.Taken
+            )
+          : await (async () => {
+              const existingCheckParams = new psy.Params({
+                external_username: accountInfo.externalUsername
+              });
+              const { rows: existingRows } = await pool.query(
+                `SELECT * FROM account WHERE external_username=${existingCheckParams.id(
+                  "external_username"
+                )}`,
+                existingCheckParams.values()
+              );
+
+              return existingRows.length
+                ? await (async () => {
+                    const params = new psy.Params({
+                      external_username: accountInfo.externalUsername,
+                      username: accountInfo.username
+                    });
+
+                    await pool.query(
+                      `UPDATE account SET username=${params.id(
+                        "username"
+                      )} WHERE external_username=${params.id(
+                        "external_username"
+                      )}
+                  `,
+                      params.values()
+                    );
+
+                    return new ValidResult(CreateOrRenameResult.Renamed);
+                  })()
+                : await (async () => {
+                    const params = new psy.Params({
+                      about: "",
+                      domain: "",
+                      enabled: true,
+                      external_username: accountInfo.externalUsername,
+                      username: accountInfo.username
+                    });
+
+                    await pool.query(
+                      `
+                  INSERT INTO account(${params.columns()})
+                  VALUES(${params.ids()})`,
+                      params.values()
+                    );
+
+                    return new ValidResult(CreateOrRenameResult.Created);
+                  })();
+            })();
       })()
-    : await (async () => {
-        const params = new psy.Params({
-          about: "",
-          domain: "",
-          enabled: true,
-          external_username: accountInfo.externalUsername,
-          username: accountInfo.username
-        });
+    : new ErrorResult({
+        code: "INVALID_USERNAME",
+        message: "Invalid characters in username"
+      });
+}
 
-        await pool.query(
-          `
-        INSERT INTO account(${params.columns()})
-        VALUES(${params.ids()})`,
-          params.values()
-        );
-
-        return new ValidResult(CreateOrRenameResult.Created);
-      })();
+function isValidUsername(username: string) {
+  const regex = /^[a-z][a-z0-9_]+$/;
+  return regex.test(username);
 }

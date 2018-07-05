@@ -161,7 +161,7 @@ describe("auth", () => {
     }
   });
 
-  it("returns account status as 'TAKEN' if username belongs to user", async () => {
+  it("returns account status as 'TAKEN' if username is in use", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
@@ -405,6 +405,50 @@ describe("auth", () => {
     const { rows } = await pool.query(`SELECT * FROM account`);
     rows.length.should.equal(1);
     rows[0].username.should.equal("jes");
+  });
+
+  it("does not rename if oneself", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+
+    const accountInfo = {
+      externalUsername: "jpk001",
+      username: "jeswin"
+    };
+    const result = await auth.createOrRename(
+      accountInfo,
+      pool,
+      getCallContext()
+    );
+
+    result.type.should.equal("data");
+    (result as any).data.should.equal("OWN");
+  });
+
+  it("does not create if username is in use", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+
+    const accountInfo = {
+      externalUsername: "alice001",
+      username: "jeswin"
+    };
+    const result = await auth.createOrRename(
+      accountInfo,
+      pool,
+      getCallContext()
+    );
+
+    result.type.should.equal("data");
+    (result as any).data.should.equal("TAKEN");
   });
 
   it("adds new permissions", async () => {
