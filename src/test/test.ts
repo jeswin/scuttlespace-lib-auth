@@ -359,7 +359,7 @@ describe("auth", () => {
     }
   });
 
-  it("creates a new account", async () => {
+  it("creates a new account (CREATED)", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
@@ -382,7 +382,7 @@ describe("auth", () => {
     rows[0].username.should.equal("jeswin");
   });
 
-  it("renames if account exists", async () => {
+  it("renames if account exists (RENAMED)", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
@@ -407,7 +407,7 @@ describe("auth", () => {
     rows[0].username.should.equal("jes");
   });
 
-  it("does not rename if oneself", async () => {
+  it("does not rename if oneself (OWN)", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
@@ -429,7 +429,7 @@ describe("auth", () => {
     (result as any).data.should.equal("OWN");
   });
 
-  it("does not create if username is in use", async () => {
+  it("does not create if username is in use (TAKEN)", async () => {
     const pool = psy.getPool(dbConfig);
 
     // clean up
