@@ -7,20 +7,20 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 
-async function accountExists(
+async function getAccount(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ) {
   const params = new psy.Params({ external_username: externalUsername });
-  const { rows: existing } = await pool.query(
+  const { rows } = await pool.query(
     `
     SELECT * FROM account 
     WHERE external_username=${params.id("external_username")}`,
     params.values()
   );
 
-  return existing.length === 0;
+  return rows[0];
 }
 
 function getMissingAccountError(externalUsername: string) {
@@ -35,10 +35,14 @@ export async function editAbout(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<undefined>> {
-  return accountExists(externalUsername, pool, context)
+): Promise<ServiceResult<{ username: string }>> {
+  const account = await getAccount(externalUsername, pool, context);
+  return account
     ? await (async () => {
-        const params = new psy.Params({ about, external_username: externalUsername });
+        const params = new psy.Params({
+          about,
+          external_username: externalUsername
+        });
         await pool.query(
           `
           UPDATE account SET about=${params.id(
@@ -46,7 +50,8 @@ export async function editAbout(
           )} WHERE external_username=${params.id("external_username")}`,
           params.values()
         );
-        return new ValidResult(undefined);
+
+        return new ValidResult({ username: account.username });
       })()
     : getMissingAccountError(externalUsername);
 }
@@ -56,10 +61,14 @@ export async function editDomain(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<undefined>> {
-  return accountExists(externalUsername, pool, context)
+): Promise<ServiceResult<{ username: string }>> {
+  const account = await getAccount(externalUsername, pool, context);
+  return account
     ? await (async () => {
-        const params = new psy.Params({ domain, external_username: externalUsername });
+        const params = new psy.Params({
+          domain,
+          external_username: externalUsername
+        });
         await pool.query(
           `
         UPDATE account SET domain=${params.id(
@@ -67,7 +76,7 @@ export async function editDomain(
         )} WHERE external_username=${params.id("external_username")}`,
           params.values()
         );
-        return new ValidResult(undefined);
+        return new ValidResult({ username: account.username });
       })()
     : getMissingAccountError(externalUsername);
 }
@@ -76,8 +85,9 @@ export async function enable(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<undefined>> {
-  return accountExists(externalUsername, pool, context)
+): Promise<ServiceResult<{ username: string }>> {
+  const account = await getAccount(externalUsername, pool, context);
+  return account
     ? await (async () => {
         const params = new psy.Params({ external_username: externalUsername });
         await pool.query(
@@ -86,7 +96,7 @@ export async function enable(
           )}`,
           params.values()
         );
-        return new ValidResult(undefined);
+        return new ValidResult({ username: account.username });
       })()
     : getMissingAccountError(externalUsername);
 }
@@ -95,8 +105,9 @@ export async function disable(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<undefined>> {
-  return accountExists(externalUsername, pool, context)
+): Promise<ServiceResult<{ username: string }>> {
+  const account = await getAccount(externalUsername, pool, context);
+  return account
     ? await (async () => {
         const params = new psy.Params({ external_username: externalUsername });
         await pool.query(
@@ -105,7 +116,7 @@ export async function disable(
           )}`,
           params.values()
         );
-        return new ValidResult(undefined);
+        return new ValidResult({ username: account.username });
       })()
     : getMissingAccountError(externalUsername);
 }
@@ -114,13 +125,16 @@ export async function destroy(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<undefined>> {
-  return accountExists(externalUsername, pool, context)
+): Promise<ServiceResult<{ username: string }>> {
+  const account = await getAccount(externalUsername, pool, context);
+  return account
     ? await (async () => {
         const params = new psy.Params({ external_username: externalUsername });
 
         const { rows } = await pool.query(
-          `SELECT * FROM account WHERE external_username=${params.id("external_username")}`,
+          `SELECT * FROM account WHERE external_username=${params.id(
+            "external_username"
+          )}`,
           params.values()
         );
 
@@ -132,7 +146,7 @@ export async function destroy(
                 )}`,
                 params.values()
               );
-              return new ValidResult(undefined);
+              return new ValidResult({ username: account.username });
             })()
           : new ErrorResult({
               code: "CANNOT_DELETE_ACTIVE_ACCOUNT",

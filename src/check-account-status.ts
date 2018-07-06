@@ -19,7 +19,7 @@ export enum AccountStatus {
 
 export default async function checkAccountStatus(
   username: string,
-  callerExternalUsername: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IAccountStatusCheckResult>> {
@@ -37,7 +37,7 @@ export default async function checkAccountStatus(
       ? { status: AccountStatus.Available }
       : rows.length > 1
         ? errors.singleOrNone(rows)
-        : rows[0].external_username === callerExternalUsername
+        : rows[0].external_username === externalUsername
           ? { status: AccountStatus.Own }
           : { status: AccountStatus.Taken };
 

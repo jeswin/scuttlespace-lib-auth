@@ -6,13 +6,13 @@ import * as errors from "./errors";
 export default async function addPermissions(
   username: string,
   assigneeExternalUsername: string,
-  callerExternalUsername: string,
+  externalUsername: string,
   permissions: string[],
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<void>> {
   const accountQueryParams = new psy.Params({
-    external_username: callerExternalUsername,
+    external_username: externalUsername,
     username
   });
   const { rows: accountRows } = await pool.query(
@@ -82,7 +82,7 @@ export default async function addPermissions(
       ? {
           error: {
             code: "NO_MANAGE_PERMISSION",
-            message: `${callerExternalUsername} cannot manage permissions for username ${username}.`
+            message: `${externalUsername} cannot manage permissions for username ${username}.`
           },
           type: "error"
         }

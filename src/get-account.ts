@@ -15,11 +15,11 @@ export interface IGetAccountByExternalUsernameResult {
 }
 
 export async function getAccountByExternalUsername(
-  callerExternalUsername: string,
+  externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IGetAccountByExternalUsernameResult | undefined>> {
-  const params = new psy.Params({ external_username: callerExternalUsername });
+  const params = new psy.Params({ external_username: externalUsername });
   const { rows } = await pool.query(
     `SELECT * FROM account
      WHERE external_username = ${params.id("external_username")}`,
@@ -32,7 +32,7 @@ export async function getAccountByExternalUsername(
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
-          externalUsername: callerExternalUsername,
+          externalUsername: externalUsername,
           username: rows[0].username
         }
       : undefined;
