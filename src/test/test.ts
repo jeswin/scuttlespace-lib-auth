@@ -281,7 +281,8 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser({ ...user1, enabled: false }, pool);
-    await auth.enable("jpk001", pool, getCallContext());
+    const apiResult = await auth.enable("jpk001", pool, getCallContext());
+    (apiResult as any).data.username.should.equal("jeswin");
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE external_username='jpk001'`
@@ -298,7 +299,8 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser(user1, pool);
-    await auth.disable("jpk001", pool, getCallContext());
+    const apiResult = await auth.disable("jpk001", pool, getCallContext());
+    (apiResult as any).data.username.should.equal("jeswin");
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE external_username='jpk001'`
@@ -315,7 +317,8 @@ describe("auth", () => {
     await pool.query(`DELETE FROM account`);
 
     await insertUser({ ...user1, enabled: false }, pool);
-    await auth.destroy("jpk001", pool, getCallContext());
+    const apiResult = await auth.destroy("jpk001", pool, getCallContext());
+    (apiResult as any).data.username.should.equal("jeswin");
 
     const { rows } = await pool.query(
       `SELECT * FROM account WHERE external_username='jpk001'`

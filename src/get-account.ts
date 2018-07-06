@@ -32,7 +32,7 @@ export async function getAccountByExternalUsername(
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
-          externalUsername: externalUsername,
+          externalUsername,
           username: rows[0].username
         }
       : undefined;
