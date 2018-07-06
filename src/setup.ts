@@ -16,7 +16,7 @@ export default async function setup() {
   const accountPermissions = [
     `CREATE TABLE account_permissions ( 
       id BIGSERIAL PRIMARY KEY,
-      username VARCHAR(64) UNIQUE NOT NULL REFERENCES account(username),
+      assignee_external_username VARCHAR(64) NOT NULL REFERENCES account(external_username),
       external_username VARCHAR(64) NOT NULL REFERENCES account(external_username),
       permissions VARCHAR(512) NOT NULL
     )`

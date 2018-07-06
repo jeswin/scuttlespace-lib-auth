@@ -101,9 +101,9 @@ async function insertUser(user: any, pool: pg.Pool) {
 }
 
 const permissions1 = {
-  external_username: "gp001",
-  permissions: "write",
-  username: "jeswin"
+  assignee_external_username: "gp001",
+  external_username: "jpk001",
+  permissions: "write"
 };
 
 async function insertPermissions(permissions: any, pool: pg.Pool) {
@@ -437,6 +437,26 @@ describe("auth", () => {
     (result as any).data.should.equal("TAKEN");
   });
 
+  it("gets permissions", async () => {
+    const pool = psy.getPool(dbConfig);
+
+    // clean up
+    await pool.query(`DELETE FROM account_permissions`);
+    await pool.query(`DELETE FROM account`);
+
+    await insertUser(user1, pool);
+    await insertUser(user2, pool);
+    await insertPermissions(permissions1, pool);
+
+    const permissions = await auth.getPermissions(
+      "jpk001",
+      pool,
+      getCallContext()
+    );
+
+    console.log(permissions);
+  });
+
   it("adds new permissions", async () => {
     const pool = psy.getPool(dbConfig);
 
@@ -447,8 +467,7 @@ describe("auth", () => {
     await insertUser(user1, pool);
     await insertUser(user2, pool);
 
-    await auth.addPermissions(
-      "jeswin",
+    await auth.setPermissions(
       "gp001",
       "jpk001",
       ["write"],
@@ -467,34 +486,6 @@ describe("auth", () => {
     ]);
   });
 
-  it("doesn't add permissions if caller externalUsername is not matched", async () => {
-    const pool = psy.getPool(dbConfig);
-
-    // clean up
-    await pool.query(`DELETE FROM account_permissions`);
-    await pool.query(`DELETE FROM account`);
-
-    await insertUser(user1, pool);
-    await insertUser(user2, pool);
-
-    const result = await auth.addPermissions(
-      "jeswin",
-      "gp001",
-      "bond001",
-      ["write"],
-      pool,
-      getCallContext()
-    );
-
-    result.type.should.equal("error");
-    if (result.type === "error") {
-      result.error.code.should.equal("NO_MANAGE_PERMISSION");
-      result.error.message.should.equal(
-        "bond001 cannot manage permissions for username jeswin."
-      );
-    }
-  });
-
   it("updates permissions", async () => {
     const pool = psy.getPool(dbConfig);
 
@@ -506,8 +497,7 @@ describe("auth", () => {
     await insertUser(user2, pool);
     await insertPermissions(permissions1, pool);
 
-    await auth.addPermissions(
-      "jeswin",
+    await auth.setPermissions(
       "gp001",
       "jpk001",
       ["read", "write"],
@@ -519,9 +509,9 @@ describe("auth", () => {
     rows.length.should.equal(1);
     rows.should.match([
       {
-        external_username: "gp001",
-        permissions: "read,write",
-        username: "jeswin"
+        assignee_external_username: "gp001",
+        external_username: "jpk001",
+        permissions: "read,write"
       }
     ]);
   });
