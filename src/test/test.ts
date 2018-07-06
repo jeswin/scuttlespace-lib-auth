@@ -274,23 +274,6 @@ describe("auth", () => {
     rows[0].domain.should.equal("jeswin.org");
   });
 
-  it("changes the username", async () => {
-    const pool = psy.getPool(dbConfig);
-
-    // clean up
-    await pool.query(`DELETE FROM account`);
-
-    await insertUser(user1, pool);
-    await auth.editUsername("furiosan", "jpk001", pool, getCallContext());
-
-    const { rows } = await pool.query(
-      `SELECT * FROM account WHERE external_username='jpk001'`
-    );
-
-    rows.length.should.equal(1);
-    rows[0].username.should.be.equal("furiosan");
-  });
-
   it("enables", async () => {
     const pool = psy.getPool(dbConfig);
 

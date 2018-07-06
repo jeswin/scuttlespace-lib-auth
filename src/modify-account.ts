@@ -72,27 +72,6 @@ export async function editDomain(
     : getMissingAccountError(externalUsername);
 }
 
-export async function editUsername(
-  username: string,
-  externalUsername: string,
-  pool: pg.Pool,
-  context: ICallContext
-): Promise<ServiceResult<undefined>> {
-  return accountExists(externalUsername, pool, context)
-    ? await (async () => {
-        const params = new psy.Params({ username, external_username: externalUsername });
-        await pool.query(
-          `
-            UPDATE account SET username=${params.id(
-              "username"
-            )} WHERE external_username=${params.id("external_username")}`,
-          params.values()
-        );
-        return new ValidResult(undefined);
-      })()
-    : getMissingAccountError(externalUsername);
-}
-
 export async function enable(
   externalUsername: string,
   pool: pg.Pool,
