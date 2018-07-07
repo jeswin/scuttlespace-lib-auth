@@ -4,7 +4,7 @@ import * as psy from "psychopiggy";
 import "should";
 import setup from "../setup";
 import activationTests from "./account/activation-tests";
-import accountCreationAndRenameTests from "./account/creation-and-rename-tests";
+import accountCreationAndRenameTests from "./account/creation-or-rename-tests";
 import accountDetailsTests from "./account/details-tests";
 import accountSettingsTests from "./account/settings-tests";
 import statusCheckTests from "./account/status-check-tests";
