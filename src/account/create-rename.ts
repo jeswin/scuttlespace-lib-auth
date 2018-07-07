@@ -7,23 +7,23 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 
-export interface ICreateOrRenameArgs {
+export interface ICreateOrRenameAccountArgs {
   externalUsername: string;
   username: string;
 }
 
-export enum CreateOrRenameResult {
+export enum CreateOrRenameAccountResult {
   Created = "CREATED",
   Own = "OWN",
   Renamed = "RENAMED",
   Taken = "TAKEN"
 }
 
-export default async function createOrRename(
-  accountInfo: ICreateOrRenameArgs,
+export async function createOrRenameAccount(
+  accountInfo: ICreateOrRenameAccountArgs,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<CreateOrRenameResult>> {
+): Promise<ServiceResult<CreateOrRenameAccountResult>> {
   return isValidUsername(accountInfo.username)
     ? await (async () => {
         const usernameCheckParams = new psy.Params({
@@ -40,8 +40,8 @@ export default async function createOrRename(
         return usernameRows.length
           ? new ValidResult(
               usernameRows[0].external_username === accountInfo.externalUsername
-                ? CreateOrRenameResult.Own
-                : CreateOrRenameResult.Taken
+                ? CreateOrRenameAccountResult.Own
+                : CreateOrRenameAccountResult.Taken
             )
           : await (async () => {
               const existingCheckParams = new psy.Params({
@@ -71,7 +71,7 @@ export default async function createOrRename(
                       params.values()
                     );
 
-                    return new ValidResult(CreateOrRenameResult.Renamed);
+                    return new ValidResult(CreateOrRenameAccountResult.Renamed);
                   })()
                 : await (async () => {
                     const params = new psy.Params({
@@ -89,7 +89,7 @@ export default async function createOrRename(
                       params.values()
                     );
 
-                    return new ValidResult(CreateOrRenameResult.Created);
+                    return new ValidResult(CreateOrRenameAccountResult.Created);
                   })();
             })();
       })()
@@ -99,7 +99,7 @@ export default async function createOrRename(
       });
 }
 
-function isValidUsername(username: string) {
+export function isValidUsername(username: string) {
   const regex = /^[a-z][a-z0-9_]+$/;
   return regex.test(username);
 }

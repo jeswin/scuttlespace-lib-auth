@@ -6,82 +6,9 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
+import { getAccount, getMissingAccountError } from "../account/common";
 
-async function getAccount(
-  externalUsername: string,
-  pool: pg.Pool,
-  context: ICallContext
-) {
-  const params = new psy.Params({ external_username: externalUsername });
-  const { rows } = await pool.query(
-    `
-    SELECT * FROM account 
-    WHERE external_username=${params.id("external_username")}`,
-    params.values()
-  );
-
-  return rows[0];
-}
-
-function getMissingAccountError(externalUsername: string) {
-  return new ErrorResult({
-    code: "ACCOUNT_DOES_NOT_EXIST",
-    message: `The user ${externalUsername} does not exist.`
-  });
-}
-
-export async function editAbout(
-  about: string,
-  externalUsername: string,
-  pool: pg.Pool,
-  context: ICallContext
-): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalUsername, pool, context);
-  return account
-    ? await (async () => {
-        const params = new psy.Params({
-          about,
-          external_username: externalUsername
-        });
-        await pool.query(
-          `
-          UPDATE account SET about=${params.id(
-            "about"
-          )} WHERE external_username=${params.id("external_username")}`,
-          params.values()
-        );
-
-        return new ValidResult({ username: account.username });
-      })()
-    : getMissingAccountError(externalUsername);
-}
-
-export async function editDomain(
-  domain: string,
-  externalUsername: string,
-  pool: pg.Pool,
-  context: ICallContext
-): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalUsername, pool, context);
-  return account
-    ? await (async () => {
-        const params = new psy.Params({
-          domain,
-          external_username: externalUsername
-        });
-        await pool.query(
-          `
-        UPDATE account SET domain=${params.id(
-          "domain"
-        )} WHERE external_username=${params.id("external_username")}`,
-          params.values()
-        );
-        return new ValidResult({ username: account.username });
-      })()
-    : getMissingAccountError(externalUsername);
-}
-
-export async function enable(
+export async function enableAccount(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
@@ -101,7 +28,7 @@ export async function enable(
     : getMissingAccountError(externalUsername);
 }
 
-export async function disable(
+export async function disableAccount(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext
@@ -121,7 +48,7 @@ export async function disable(
     : getMissingAccountError(externalUsername);
 }
 
-export async function destroy(
+export async function destroyAccount(
   externalUsername: string,
   pool: pg.Pool,
   context: ICallContext

@@ -5,7 +5,7 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
-import * as errors from "./errors";
+import * as errors from "../errors";
 
 export interface IAccountStatusCheckResult {
   status: AccountStatus;
@@ -17,7 +17,7 @@ export enum AccountStatus {
   Own = "OWN"
 }
 
-export default async function checkAccountStatus(
+export async function getUsernameAvailability(
   username: string,
   externalUsername: string,
   pool: pg.Pool,

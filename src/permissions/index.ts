@@ -6,7 +6,7 @@ import {
   ServiceResult,
   ValidResult,
 } from "scuttlespace-api-common";
-import * as errors from "./errors";
+import * as errors from "../errors";
 
 export interface IGetPermissionsResult {
   permissions: {
@@ -82,7 +82,7 @@ export async function setPermissions(
 
         const insertionParams = new psy.Params({
           assignee_external_username: assigneeExternalUsername,
-          external_username: assigneeExternalUsername,
+          external_username: externalUsername,
           permissions: permissions.join(",")
         });
 

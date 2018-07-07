@@ -1,6 +1,6 @@
 {
   "name": "scuttlespace-service-auth",
-  "version": "0.0.20",
+  "version": "0.0.21",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "main": "dist/index",
   "types": "dist/index.d.ts",
