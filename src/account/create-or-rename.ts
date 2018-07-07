@@ -8,7 +8,7 @@ import {
 } from "scuttlespace-api-common";
 
 export interface ICreateOrRenameAccountArgs {
-  externalUsername: string;
+  externalId: string;
   username: string;
 }
 
@@ -39,17 +39,17 @@ export async function createOrRenameAccount(
 
         return usernameRows.length
           ? new ValidResult(
-              usernameRows[0].external_username === accountInfo.externalUsername
+              usernameRows[0].external_id === accountInfo.externalId
                 ? CreateOrRenameAccountResult.Own
                 : CreateOrRenameAccountResult.Taken
             )
           : await (async () => {
               const existingCheckParams = new psy.Params({
-                external_username: accountInfo.externalUsername
+                external_id: accountInfo.externalId
               });
               const { rows: existingRows } = await pool.query(
-                `SELECT * FROM account WHERE external_username=${existingCheckParams.id(
-                  "external_username"
+                `SELECT * FROM account WHERE external_id=${existingCheckParams.id(
+                  "external_id"
                 )}`,
                 existingCheckParams.values()
               );
@@ -57,15 +57,15 @@ export async function createOrRenameAccount(
               return existingRows.length
                 ? await (async () => {
                     const params = new psy.Params({
-                      external_username: accountInfo.externalUsername,
+                      external_id: accountInfo.externalId,
                       username: accountInfo.username
                     });
 
                     await pool.query(
                       `UPDATE account SET username=${params.id(
                         "username"
-                      )} WHERE external_username=${params.id(
-                        "external_username"
+                      )} WHERE external_id=${params.id(
+                        "external_id"
                       )}
                   `,
                       params.values()
@@ -78,7 +78,7 @@ export async function createOrRenameAccount(
                       about: "",
                       domain: "",
                       enabled: true,
-                      external_username: accountInfo.externalUsername,
+                      external_id: accountInfo.externalId,
                       username: accountInfo.username
                     });
 

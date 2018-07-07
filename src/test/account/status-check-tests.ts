@@ -21,7 +21,7 @@ export default function() {
         about: "hal9000 supervisor",
         domain: "jeswin.org",
         enabled: true,
-        external_username: "jpk001",
+        external_id: "jpk001",
         username: "jeswin"
       });
       await pool.query(

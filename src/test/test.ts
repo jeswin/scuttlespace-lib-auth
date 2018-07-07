@@ -83,7 +83,7 @@ export const user1 = {
   about: "hal9000 supervisor",
   domain: "jeswin.org",
   enabled: true,
-  external_username: "jpk001",
+  external_id: "jpk001",
   username: "jeswin"
 };
 
@@ -91,7 +91,7 @@ export const user2 = {
   about: "bazinga!",
   domain: "example.com",
   enabled: true,
-  external_username: "gp001",
+  external_id: "gp001",
   username: "geospeed"
 };
 
@@ -104,8 +104,8 @@ export async function insertUser(user: any, pool: pg.Pool) {
 }
 
 export const permissions1 = {
-  assignee_external_username: "gp001",
-  external_username: "jpk001",
+  assignee_external_id: "gp001",
+  external_id: "jpk001",
   permissions: "write"
 };
 

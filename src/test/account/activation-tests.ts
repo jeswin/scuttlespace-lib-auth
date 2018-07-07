@@ -21,7 +21,7 @@ export default function() {
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
-        `SELECT * FROM account WHERE external_username='jpk001'`
+        `SELECT * FROM account WHERE external_id='jpk001'`
       );
 
       rows.length.should.equal(1);
@@ -43,7 +43,7 @@ export default function() {
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
-        `SELECT * FROM account WHERE external_username='jpk001'`
+        `SELECT * FROM account WHERE external_id='jpk001'`
       );
 
       rows.length.should.equal(1);
@@ -65,7 +65,7 @@ export default function() {
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
-        `SELECT * FROM account WHERE external_username='jpk001'`
+        `SELECT * FROM account WHERE external_id='jpk001'`
       );
 
       rows.length.should.equal(0);

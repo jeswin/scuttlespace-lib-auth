@@ -9,58 +9,58 @@ import {
 import { getAccount, getMissingAccountError } from "../account/common";
 
 export async function enableAccount(
-  externalUsername: string,
+  externalId: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalUsername, pool, context);
+  const account = await getAccount(externalId, pool, context);
   return account
     ? await (async () => {
-        const params = new psy.Params({ external_username: externalUsername });
+        const params = new psy.Params({ external_id: externalId });
         await pool.query(
-          `UPDATE account SET enabled=true WHERE external_username=${params.id(
-            "external_username"
+          `UPDATE account SET enabled=true WHERE external_id=${params.id(
+            "external_id"
           )}`,
           params.values()
         );
         return new ValidResult({ username: account.username });
       })()
-    : getMissingAccountError(externalUsername);
+    : getMissingAccountError(externalId);
 }
 
 export async function disableAccount(
-  externalUsername: string,
+  externalId: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalUsername, pool, context);
+  const account = await getAccount(externalId, pool, context);
   return account
     ? await (async () => {
-        const params = new psy.Params({ external_username: externalUsername });
+        const params = new psy.Params({ external_id: externalId });
         await pool.query(
-          `UPDATE account SET enabled=false WHERE external_username=${params.id(
-            "external_username"
+          `UPDATE account SET enabled=false WHERE external_id=${params.id(
+            "external_id"
           )}`,
           params.values()
         );
         return new ValidResult({ username: account.username });
       })()
-    : getMissingAccountError(externalUsername);
+    : getMissingAccountError(externalId);
 }
 
 export async function destroyAccount(
-  externalUsername: string,
+  externalId: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalUsername, pool, context);
+  const account = await getAccount(externalId, pool, context);
   return account
     ? await (async () => {
-        const params = new psy.Params({ external_username: externalUsername });
+        const params = new psy.Params({ external_id: externalId });
 
         const { rows } = await pool.query(
-          `SELECT * FROM account WHERE external_username=${params.id(
-            "external_username"
+          `SELECT * FROM account WHERE external_id=${params.id(
+            "external_id"
           )}`,
           params.values()
         );
@@ -68,8 +68,8 @@ export async function destroyAccount(
         return !rows[0].enabled
           ? await (async () => {
               await pool.query(
-                `DELETE FROM account WHERE external_username=${params.id(
-                  "external_username"
+                `DELETE FROM account WHERE external_id=${params.id(
+                  "external_id"
                 )}`,
                 params.values()
               );
@@ -80,5 +80,5 @@ export async function destroyAccount(
               message: `An account in active status cannot be deleted.`
             });
       })()
-    : getMissingAccountError(externalUsername);
+    : getMissingAccountError(externalId);
 }

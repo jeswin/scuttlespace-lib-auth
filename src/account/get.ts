@@ -6,33 +6,33 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 
-export interface IGetAccountByExternalUsernameResult {
+export interface IGetAccountByExternalIdResult {
   about: string;
   domain: string;
   enabled: boolean;
-  externalUsername: string;
+  externalId: string;
   username: string;
 }
 
-export async function getAccountByExternalUsername(
-  externalUsername: string,
+export async function getAccountByExternalId(
+  externalId: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<IGetAccountByExternalUsernameResult | undefined>> {
-  const params = new psy.Params({ external_username: externalUsername });
+): Promise<ServiceResult<IGetAccountByExternalIdResult | undefined>> {
+  const params = new psy.Params({ external_id: externalId });
   const { rows } = await pool.query(
     `SELECT * FROM account
-     WHERE external_username = ${params.id("external_username")}`,
+     WHERE external_id = ${params.id("external_id")}`,
     params.values()
   );
 
-  const result: IGetAccountByExternalUsernameResult | undefined =
+  const result: IGetAccountByExternalIdResult | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
-          externalUsername,
+          externalId,
           username: rows[0].username
         }
       : undefined;
@@ -44,7 +44,7 @@ export async function getAccountByUsername(
   username: string,
   pool: pg.Pool,
   context: ICallContext
-): Promise<ServiceResult<IGetAccountByExternalUsernameResult | undefined>> {
+): Promise<ServiceResult<IGetAccountByExternalIdResult | undefined>> {
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
     `SELECT * FROM account
@@ -52,13 +52,13 @@ export async function getAccountByUsername(
     params.values()
   );
 
-  const result: IGetAccountByExternalUsernameResult | undefined =
+  const result: IGetAccountByExternalIdResult | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
-          externalUsername: rows[0].external_username,
+          externalId: rows[0].external_id,
           username
         }
       : undefined;

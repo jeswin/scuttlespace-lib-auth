@@ -13,7 +13,7 @@ export default function() {
       await pool.query(`DELETE FROM account`);
 
       const accountInfo = {
-        externalUsername: "jpk001",
+        externalId: "jpk001",
         username: "jeswin"
       };
       const result = await auth.createOrRenameAccount(
@@ -38,7 +38,7 @@ export default function() {
       await insertUser(user1, pool);
 
       const accountInfo = {
-        externalUsername: "jpk001",
+        externalId: "jpk001",
         username: "jes"
       };
       const result = await auth.createOrRenameAccount(
@@ -63,7 +63,7 @@ export default function() {
       await insertUser(user1, pool);
 
       const accountInfo = {
-        externalUsername: "jpk001",
+        externalId: "jpk001",
         username: "jeswin"
       };
       const result = await auth.createOrRenameAccount(
@@ -85,7 +85,7 @@ export default function() {
       await insertUser(user1, pool);
 
       const accountInfo = {
-        externalUsername: "alice001",
+        externalId: "alice001",
         username: "jeswin"
       };
       const result = await auth.createOrRenameAccount(

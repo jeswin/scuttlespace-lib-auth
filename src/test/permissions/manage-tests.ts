@@ -33,8 +33,8 @@ export default function() {
 
       (result as any).data.permissions.should.deepEqual([
         {
-          assigneeExternalUsername: undefined,
-          externalUsername: "jpk001",
+          assigneeExternalId: undefined,
+          externalId: "jpk001",
           permissions: undefined
         }
       ]);
@@ -62,8 +62,8 @@ export default function() {
       rows.length.should.equal(1);
       rows.should.match([
         {
-          assignee_external_username: "gp001",
-          external_username: "jpk001",
+          assignee_external_id: "gp001",
+          external_id: "jpk001",
           permissions: "write"
         }
       ]);
@@ -92,8 +92,8 @@ export default function() {
       rows.length.should.equal(1);
       rows.should.match([
         {
-          assignee_external_username: "gp001",
-          external_username: "jpk001",
+          assignee_external_id: "gp001",
+          external_id: "jpk001",
           permissions: "read,delete"
         }
       ]);

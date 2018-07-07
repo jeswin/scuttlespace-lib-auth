@@ -8,14 +8,14 @@ const shouldLib = require("should");
 
 export default function() {
   describe("status check", () => {
-    it("gets account details by external_username", async () => {
+    it("gets account details by external_id", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
       await pool.query(`DELETE FROM account`);
 
       await insertUser(user1, pool);
-      const result = await auth.getAccountByExternalUsername(
+      const result = await auth.getAccountByExternalId(
         "jpk001",
         pool,
         getCallContext()
@@ -25,7 +25,7 @@ export default function() {
         about: "hal9000 supervisor",
         domain: "jeswin.org",
         enabled: true,
-        externalUsername: "jpk001",
+        externalId: "jpk001",
         username: "jeswin"
       });
     });
@@ -47,7 +47,7 @@ export default function() {
         about: "hal9000 supervisor",
         domain: "jeswin.org",
         enabled: true,
-        externalUsername: "jpk001",
+        externalId: "jpk001",
         username: "jeswin"
       });
     });
@@ -59,7 +59,7 @@ export default function() {
       await pool.query(`DELETE FROM account`);
 
       await insertUser(user1, pool);
-      const result = await auth.getAccountByExternalUsername(
+      const result = await auth.getAccountByExternalId(
         "boom1",
         pool,
         getCallContext()

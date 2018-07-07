@@ -10,52 +10,52 @@ import * as errors from "../errors";
 
 export interface IGetPermissionsResult {
   permissions: {
-    assigneeExternalUsername: string;
-    externalUsername: string;
+    assigneeExternalId: string;
+    externalId: string;
     permissions: string;
   }[];
 }
 
 export async function getPermissions(
-  externalUsername: string,
+  externalId: string,
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IGetPermissionsResult>> {
   const accountQueryParams = new psy.Params({
-    external_username: externalUsername
+    external_id: externalId
   });
   const { rows: accountRows } = await pool.query(
     `
     SELECT * FROM account 
     WHERE 
-      external_username = ${accountQueryParams.id("external_username")}`,
+      external_id = ${accountQueryParams.id("external_id")}`,
     accountQueryParams.values()
   );
 
   return new ValidResult({
     permissions: accountRows.map(r => ({
-      assigneeExternalUsername: r.assignee_external_username,
-      externalUsername: r.external_username,
+      assigneeExternalId: r.assignee_external_id,
+      externalId: r.external_id,
       permissions: r.permissions
     }))
   });
 }
 
 export async function setPermissions(
-  assigneeExternalUsername: string,
-  externalUsername: string,
+  assigneeExternalId: string,
+  externalId: string,
   permissions: string[],
   pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const accountQueryParams = new psy.Params({
-    external_username: externalUsername
+    external_id: externalId
   });
   const { rows: accountRows } = await pool.query(
     `
     SELECT * FROM account 
     WHERE 
-      external_username = ${accountQueryParams.id("external_username")}`,
+      external_id = ${accountQueryParams.id("external_id")}`,
     accountQueryParams.values()
   );
 
@@ -64,25 +64,25 @@ export async function setPermissions(
   return accountRows.length === 1
     ? await (async () => {
         const permissionsQueryParams = new psy.Params({
-          assignee_external_username: assigneeExternalUsername,
-          external_username: externalUsername
+          assignee_external_id: assigneeExternalId,
+          external_id: externalId
         });
         const { rows: permissionsRows } = await pool.query(
           `
         SELECT * FROM account_permissions
         WHERE 
-          assignee_external_username = ${permissionsQueryParams.id(
-            "assignee_external_username"
+          assignee_external_id = ${permissionsQueryParams.id(
+            "assignee_external_id"
           )} AND 
-          external_username = ${permissionsQueryParams.id(
-            "external_username"
+          external_id = ${permissionsQueryParams.id(
+            "external_id"
           )}`,
           permissionsQueryParams.values()
         );
 
         const insertionParams = new psy.Params({
-          assignee_external_username: assigneeExternalUsername,
-          external_username: externalUsername,
+          assignee_external_id: assigneeExternalId,
+          external_id: externalId,
           permissions: permissions.join(",")
         });
 
@@ -98,8 +98,8 @@ export async function setPermissions(
           : permissionsRows.length === 1
             ? await (async () => {
                 const updationParams = new psy.Params({
-                  assignee_external_username: assigneeExternalUsername,
-                  external_username: externalUsername,
+                  assignee_external_id: assigneeExternalId,
+                  external_id: externalId,
                   permissions: permissions.join(",")
                 });
                 await pool.query(
@@ -108,11 +108,11 @@ export async function setPermissions(
                     "permissions"
                   )}
                   WHERE 
-                    assignee_external_username = ${updationParams.id(
-                      "assignee_external_username"
+                    assignee_external_id = ${updationParams.id(
+                      "assignee_external_id"
                     )} AND 
-                    external_username = ${updationParams.id(
-                      "external_username"
+                    external_id = ${updationParams.id(
+                      "external_id"
                     )}
                 `,
                   updationParams.values()
@@ -124,7 +124,7 @@ export async function setPermissions(
     : accountRows.length === 0
       ? new ErrorResult({
           code: "NO_ACCOUNT",
-          message: `${externalUsername} does not have an account. Create an account first.`
+          message: `${externalId} does not have an account. Create an account first.`
         })
       : errors.singleOrNone(accountRows);
 }
