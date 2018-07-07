@@ -3,12 +3,16 @@ import pg = require("pg");
 import * as psy from "psychopiggy";
 import "should";
 import setup from "../setup";
+
 import activationTests from "./account/activation-tests";
 import accountCreationAndRenameTests from "./account/creation-or-rename-tests";
 import accountDetailsTests from "./account/details-tests";
 import accountSettingsTests from "./account/settings-tests";
 import statusCheckTests from "./account/status-check-tests";
-import managePermissionsTests from "./permissions/manage-tests";
+
+import addPermissionsTests from "./permissions/add-tests";
+import clearPermissionsTests from "./permissions/clear-tests";
+import getPermissionsTests from "./permissions/get-tests";
 
 /* tslint:disable */
 if (
@@ -95,6 +99,14 @@ export const user2 = {
   username: "geospeed"
 };
 
+export const user3 = {
+  about: "imoku soso",
+  domain: "th.example.com",
+  enabled: true,
+  external_id: "th001",
+  username: "thommi"
+};
+
 export async function insertUser(user: any, pool: pg.Pool) {
   const params = new psy.Params(user);
   await pool.query(
@@ -106,10 +118,19 @@ export async function insertUser(user: any, pool: pg.Pool) {
 export const permissions1 = {
   assignee_external_id: "gp001",
   external_id: "jpk001",
-  permissions: "write"
+  permissions: "learning:read,pub:read,pub:write"
 };
 
-export async function insertPermissions(permissions: any, pool: pg.Pool) {
+export const permissions2 = {
+  assignee_external_id: "th001",
+  external_id: "jpk001",
+  permissions: "pub:read"
+};
+
+export async function insertPermissions(
+  permissions: typeof permissions1,
+  pool: pg.Pool
+) {
   const params = new psy.Params(permissions);
   await pool.query(
     `INSERT INTO account_permissions (${params.columns()}) VALUES(${params.ids()})`,
@@ -133,5 +154,8 @@ describe("auth", () => {
   statusCheckTests();
   accountDetailsTests();
   activationTests();
-  managePermissionsTests();
+  
+  getPermissionsTests();
+  addPermissionsTests();
+  clearPermissionsTests();
 });
