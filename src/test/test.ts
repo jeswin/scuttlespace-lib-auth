@@ -2,6 +2,7 @@ import "mocha";
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import "should";
+import * as auth from "../";
 import setup from "../setup";
 
 import activationTests from "./account/activation-tests";
@@ -36,19 +37,11 @@ if (
 }
 /* tslint:enable */
 
-export interface IDbConfig {
-  database: string;
-  host: string;
-  password: string;
-  port: number;
-  user: string;
-}
-
 export function getCallContext() {
   return { id: "TEST_RUN" };
 }
 
-async function recreateDb(config: IDbConfig) {
+async function recreateDb(config: psy.IDbConfig) {
   const pool = new pg.Pool({ ...config, database: "template1" });
 
   const {
@@ -147,6 +140,7 @@ describe("auth", () => {
     for (const sql of queries) {
       await pool.query(sql);
     }
+    await auth.init(getDbConfig());
   });
 
   accountCreationAndRenameTests();
@@ -154,7 +148,7 @@ describe("auth", () => {
   statusCheckTests();
   accountDetailsTests();
   activationTests();
-  
+
   getPermissionsTests();
   addPermissionsTests();
   clearPermissionsTests();

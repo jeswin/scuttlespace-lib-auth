@@ -9,7 +9,7 @@ import {
   insertUser,
   permissions1,
   user1,
-  user2,
+  user2
 } from "../test";
 
 export default function() {
@@ -28,7 +28,6 @@ export default function() {
         "gp001",
         "jpk001",
         [{ module: "pub", permission: "del" }],
-        pool,
         getCallContext()
       );
 
@@ -62,7 +61,6 @@ export default function() {
           { module: "pub", permission: "full" },
           { module: "pub", permission: "admin" }
         ],
-        pool,
         getCallContext()
       );
 

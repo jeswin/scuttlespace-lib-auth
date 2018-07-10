@@ -6,6 +6,7 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 import { IPermission } from ".";
+import { getPool } from "../pool";
 
 export type IGetPermissionsResult = {
   assigneeExternalId: string;
@@ -15,9 +16,9 @@ export type IGetPermissionsResult = {
 
 export async function getPermissions(
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IGetPermissionsResult>> {
+  const pool = getPool();
   const accountQueryParams = new psy.Params({
     external_id: externalId
   });
@@ -52,9 +53,9 @@ export interface IGetPermissionsForUserResult {
 export async function getPermissionsForUser(
   assigneeExternalId: string,
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IGetPermissionsForUserResult | undefined>> {
+  const pool = getPool();
   const accountQueryParams = new psy.Params({
     assignee_external_id: assigneeExternalId,
     external_id: externalId

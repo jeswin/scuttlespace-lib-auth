@@ -13,12 +13,7 @@ export default function() {
       await pool.query(`DELETE FROM account`);
 
       await insertUser(user1, pool);
-      await auth.editAccountAbout(
-        "Hello world",
-        "jpk001",
-        pool,
-        getCallContext()
-      );
+      await auth.editAccountAbout("Hello world", "jpk001", getCallContext());
 
       const { rows } = await pool.query(
         `SELECT * FROM account WHERE external_id='jpk001'`
@@ -35,12 +30,7 @@ export default function() {
       await pool.query(`DELETE FROM account`);
 
       await insertUser(user1, pool);
-      await auth.editAccountDomain(
-        "jeswin.org",
-        "jpk001",
-        pool,
-        getCallContext()
-      );
+      await auth.editAccountDomain("jeswin.org", "jpk001", getCallContext());
 
       const { rows } = await pool.query(
         `SELECT * FROM account WHERE external_id='jpk001'`

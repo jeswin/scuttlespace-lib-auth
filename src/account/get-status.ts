@@ -6,6 +6,7 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 import * as errors from "../errors";
+import { getPool } from "../pool";
 
 export interface IAccountStatusCheckResult {
   status: AccountStatus;
@@ -20,9 +21,9 @@ export enum AccountStatus {
 export async function getUsernameAvailability(
   username: string,
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IAccountStatusCheckResult>> {
+  const pool = getPool();
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
     `

@@ -6,6 +6,7 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
+import { getPool } from "../pool";
 
 export interface ICreateOrRenameAccountArgs {
   externalId: string;
@@ -21,9 +22,9 @@ export enum CreateOrRenameAccountResult {
 
 export async function createOrRenameAccount(
   accountInfo: ICreateOrRenameAccountArgs,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<CreateOrRenameAccountResult>> {
+  const pool = getPool();
   return isValidUsername(accountInfo.username)
     ? await (async () => {
         const usernameCheckParams = new psy.Params({
@@ -64,9 +65,7 @@ export async function createOrRenameAccount(
                     await pool.query(
                       `UPDATE account SET username=${params.id(
                         "username"
-                      )} WHERE external_id=${params.id(
-                        "external_id"
-                      )}
+                      )} WHERE external_id=${params.id("external_id")}
                   `,
                       params.values()
                     );

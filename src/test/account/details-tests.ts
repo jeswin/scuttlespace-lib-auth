@@ -17,7 +17,6 @@ export default function() {
       await insertUser(user1, pool);
       const result = await auth.getAccountByExternalId(
         "jpk001",
-        pool,
         getCallContext()
       );
       shouldLib.exist(result);
@@ -39,7 +38,6 @@ export default function() {
       await insertUser(user1, pool);
       const result = await auth.getAccountByUsername(
         "jeswin",
-        pool,
         getCallContext()
       );
       shouldLib.exist(result);
@@ -61,7 +59,6 @@ export default function() {
       await insertUser(user1, pool);
       const result = await auth.getAccountByExternalId(
         "boom1",
-        pool,
         getCallContext()
       );
       shouldLib.not.exist((result as any).data);

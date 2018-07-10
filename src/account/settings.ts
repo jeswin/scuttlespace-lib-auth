@@ -6,14 +6,15 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 import { getAccount, getMissingAccountError } from "../account/common";
+import { getPool } from "../pool";
 
 export async function editAccountAbout(
   about: string,
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalId, pool, context);
+  const pool = getPool();
+  const account = await getAccount(externalId, context);
   return account
     ? await (async () => {
         const params = new psy.Params({
@@ -36,10 +37,10 @@ export async function editAccountAbout(
 export async function editAccountDomain(
   domain: string,
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalId, pool, context);
+  const pool = getPool();
+  const account = await getAccount(externalId, context);
   return account
     ? await (async () => {
         const params = new psy.Params({

@@ -8,24 +8,24 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 import { getAccountByExternalId } from "../account";
-import * as errors from "../errors";
+import { getPool } from "../pool";
 import { getPermissionsForUser } from "./get";
 
 export async function clearPermissions(
   module: string,
   assigneeExternalId: string,
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
+  const pool = getPool();
   const maybeAccount = await parseServiceResult(
-    getAccountByExternalId(externalId, pool, context)
+    getAccountByExternalId(externalId, context)
   );
 
   return maybeAccount
     ? await (async () => {
         const maybePermissions = await parseServiceResult(
-          getPermissionsForUser(assigneeExternalId, externalId, pool, context)
+          getPermissionsForUser(assigneeExternalId, externalId, context)
         );
         return !maybePermissions
           ? new ValidResult({ username: maybeAccount.username })

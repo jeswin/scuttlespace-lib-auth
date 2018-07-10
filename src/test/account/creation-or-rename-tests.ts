@@ -18,7 +18,6 @@ export default function() {
       };
       const result = await auth.createOrRenameAccount(
         accountInfo,
-        pool,
         getCallContext()
       );
       result.type.should.equal("data");
@@ -43,7 +42,6 @@ export default function() {
       };
       const result = await auth.createOrRenameAccount(
         accountInfo,
-        pool,
         getCallContext()
       );
       result.type.should.equal("data");
@@ -68,7 +66,6 @@ export default function() {
       };
       const result = await auth.createOrRenameAccount(
         accountInfo,
-        pool,
         getCallContext()
       );
 
@@ -90,7 +87,6 @@ export default function() {
       };
       const result = await auth.createOrRenameAccount(
         accountInfo,
-        pool,
         getCallContext()
       );
 

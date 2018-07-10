@@ -29,13 +29,7 @@ export default function() {
       await insertPermissions(permissions1, pool);
       await insertPermissions(permissions2, pool);
 
-      await auth.clearPermissions(
-        "pub",
-        "gp001",
-        "jpk001",
-        pool,
-        getCallContext()
-      );
+      await auth.clearPermissions("pub", "gp001", "jpk001", getCallContext());
 
       const { rows } = await pool.query(
         `SELECT * FROM account_permissions WHERE assignee_external_id='gp001'`

@@ -29,11 +29,7 @@ export default function() {
       await insertPermissions(permissions1, pool);
       await insertPermissions(permissions2, pool);
 
-      const result = await auth.getPermissions(
-        "jpk001",
-        pool,
-        getCallContext()
-      );
+      const result = await auth.getPermissions("jpk001", getCallContext());
 
       (result as any).data.should.deepEqual([
         {
@@ -69,7 +65,6 @@ export default function() {
       const result = await auth.getPermissionsForUser(
         "th001",
         "jpk001",
-        pool,
         getCallContext()
       );
 

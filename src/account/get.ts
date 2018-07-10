@@ -5,6 +5,7 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
+import { getPool } from "../pool";
 
 export interface IGetAccountByExternalIdResult {
   about: string;
@@ -16,9 +17,9 @@ export interface IGetAccountByExternalIdResult {
 
 export async function getAccountByExternalId(
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IGetAccountByExternalIdResult | undefined>> {
+  const pool = getPool();
   const params = new psy.Params({ external_id: externalId });
   const { rows } = await pool.query(
     `SELECT * FROM account
@@ -42,9 +43,9 @@ export async function getAccountByExternalId(
 
 export async function getAccountByUsername(
   username: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<IGetAccountByExternalIdResult | undefined>> {
+  const pool = getPool();
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
     `SELECT * FROM account

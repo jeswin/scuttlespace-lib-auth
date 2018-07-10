@@ -8,7 +8,7 @@ export default function() {
   describe("status check", () => {
     it("returns account status as 'AVAILABLE' if username does not exist", async () => {
       const pool = psy.getPool(dbConfig);
-      await auth.getUsernameAvailability("jeswin", "jpk001", pool, getCallContext());
+      await auth.getUsernameAvailability("jeswin", "jpk001", getCallContext());
     });
 
     it("returns account status as 'OWN' if username belongs to user", async () => {
@@ -32,7 +32,6 @@ export default function() {
       const result = await auth.getUsernameAvailability(
         "jeswin",
         "jpk001",
-        pool,
         getCallContext()
       );
 
@@ -52,7 +51,6 @@ export default function() {
       const result = await auth.getUsernameAvailability(
         "jeswin",
         "alice001",
-        pool,
         getCallContext()
       );
 

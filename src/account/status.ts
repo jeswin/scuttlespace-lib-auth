@@ -7,13 +7,14 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 import { getAccount, getMissingAccountError } from "../account/common";
+import { getPool } from "../pool";
 
 export async function enableAccount(
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalId, pool, context);
+  const pool = getPool();
+  const account = await getAccount(externalId, context);
   return account
     ? await (async () => {
         const params = new psy.Params({ external_id: externalId });
@@ -30,10 +31,10 @@ export async function enableAccount(
 
 export async function disableAccount(
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalId, pool, context);
+  const pool = getPool();
+  const account = await getAccount(externalId, context);
   return account
     ? await (async () => {
         const params = new psy.Params({ external_id: externalId });
@@ -50,18 +51,16 @@ export async function disableAccount(
 
 export async function destroyAccount(
   externalId: string,
-  pool: pg.Pool,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
-  const account = await getAccount(externalId, pool, context);
+  const pool = getPool();
+  const account = await getAccount(externalId, context);
   return account
     ? await (async () => {
         const params = new psy.Params({ external_id: externalId });
 
         const { rows } = await pool.query(
-          `SELECT * FROM account WHERE external_id=${params.id(
-            "external_id"
-          )}`,
+          `SELECT * FROM account WHERE external_id=${params.id("external_id")}`,
           params.values()
         );
 
