@@ -6,5 +6,7 @@ export * from "./account";
 export * from "./permissions";
 
 export async function init(dbConfig: IDbConfig) {
-  await pool.init(dbConfig);
+  return {
+    pool: await pool.init(dbConfig)
+  };
 }
