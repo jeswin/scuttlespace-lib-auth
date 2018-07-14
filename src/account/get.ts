@@ -7,7 +7,7 @@ import {
 } from "scuttlespace-api-common";
 import { getPool } from "../pool";
 
-export interface IGetAccountByExternalIdResult {
+export interface IGetAccountResult {
   about: string;
   domain: string;
   enabled: boolean;
@@ -18,7 +18,7 @@ export interface IGetAccountByExternalIdResult {
 export async function getAccountByExternalId(
   externalId: string,
   context: ICallContext
-): Promise<ServiceResult<IGetAccountByExternalIdResult | undefined>> {
+): Promise<ServiceResult<IGetAccountResult | undefined>> {
   const pool = getPool();
   const params = new psy.Params({ external_id: externalId });
   const { rows } = await pool.query(
@@ -27,7 +27,7 @@ export async function getAccountByExternalId(
     params.values()
   );
 
-  const result: IGetAccountByExternalIdResult | undefined =
+  const result: IGetAccountResult | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
@@ -44,7 +44,7 @@ export async function getAccountByExternalId(
 export async function getAccountByUsername(
   username: string,
   context: ICallContext
-): Promise<ServiceResult<IGetAccountByExternalIdResult | undefined>> {
+): Promise<ServiceResult<IGetAccountResult | undefined>> {
   const pool = getPool();
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
@@ -53,7 +53,7 @@ export async function getAccountByUsername(
     params.values()
   );
 
-  const result: IGetAccountByExternalIdResult | undefined =
+  const result: IGetAccountResult | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
