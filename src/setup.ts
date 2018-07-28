@@ -1,6 +1,6 @@
 export default async function setup() {
-  const account = [
-    `CREATE TABLE account (
+  const user = [
+    `CREATE TABLE scuttlespace_user (
       rowid BIGSERIAL PRIMARY KEY,
       username VARCHAR(64) UNIQUE NOT NULL,
       external_id VARCHAR(64) UNIQUE NOT NULL,
@@ -8,19 +8,19 @@ export default async function setup() {
       domain VARCHAR(128),
       about TEXT
     )`,
-    `CREATE INDEX account_username_index ON account(username)`,
-    `CREATE INDEX account_external_id_index ON account(external_id)`,
-    `CREATE INDEX account_domain_index ON account(domain)`
+    `CREATE INDEX user_username_index ON scuttlespace_user(username)`,
+    `CREATE INDEX user_external_id_index ON scuttlespace_user(external_id)`,
+    `CREATE INDEX user_domain_index ON scuttlespace_user(domain)`
   ];
 
-  const accountPermissions = [
-    `CREATE TABLE account_permissions ( 
+  const userPermissions = [
+    `CREATE TABLE user_permissions ( 
       rowid BIGSERIAL PRIMARY KEY,
-      assignee_external_id VARCHAR(64) NOT NULL REFERENCES account(external_id),
-      external_id VARCHAR(64) NOT NULL REFERENCES account(external_id),
+      assignee_external_id VARCHAR(64) NOT NULL REFERENCES scuttlespace_user(external_id),
+      assigner_external_id VARCHAR(64) NOT NULL REFERENCES scuttlespace_user(external_id),
       permissions TEXT NOT NULL
     )`
   ];
 
-  return account.concat(accountPermissions);
+  return user.concat(userPermissions);
 }

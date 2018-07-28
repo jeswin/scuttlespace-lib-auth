@@ -20,8 +20,8 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account_permissions`);
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM user_permissions`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
       await insertUser(user2, pool);
@@ -34,7 +34,7 @@ export default function() {
       (result as any).data.should.deepEqual([
         {
           assigneeExternalId: "gp001",
-          externalId: "jpk001",
+          assignerExternalId: "jpk001",
           permissions: [
             { module: "learning", permission: "read" },
             { module: "pub", permission: "read" },
@@ -43,7 +43,7 @@ export default function() {
         },
         {
           assigneeExternalId: "th001",
-          externalId: "jpk001",
+          assignerExternalId: "jpk001",
           permissions: [{ module: "pub", permission: "read" }]
         }
       ]);
@@ -53,8 +53,8 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account_permissions`);
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM user_permissions`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
       await insertUser(user2, pool);
@@ -70,7 +70,7 @@ export default function() {
 
       (result as any).data.should.deepEqual({
         assigneeExternalId: "th001",
-        externalId: "jpk001",
+        assignerExternalId: "jpk001",
         permissions: [{ module: "pub", permission: "read" }]
       });
     });

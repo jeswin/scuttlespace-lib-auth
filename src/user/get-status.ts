@@ -8,11 +8,11 @@ import {
 import * as errors from "../errors";
 import { getPool } from "../pool";
 
-export interface IAccountStatusCheckResult {
-  status: AccountStatus;
+export interface IUserStatusCheckResult {
+  status: UserStatus;
 }
 
-export enum AccountStatus {
+export enum UserStatus {
   Available = "AVAILABLE",
   Taken = "TAKEN",
   Own = "OWN"
@@ -22,25 +22,25 @@ export async function getUsernameAvailability(
   username: string,
   externalId: string,
   context: ICallContext
-): Promise<ServiceResult<IAccountStatusCheckResult>> {
+): Promise<ServiceResult<IUserStatusCheckResult>> {
   const pool = getPool();
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
     `
-    SELECT * FROM account
+    SELECT * FROM scuttlespace_user
     WHERE 
       username = ${params.id("username")}`,
     params.values()
   );
 
-  const result: IAccountStatusCheckResult =
+  const result: IUserStatusCheckResult =
     rows.length === 0
-      ? { status: AccountStatus.Available }
+      ? { status: UserStatus.Available }
       : rows.length > 1
         ? errors.singleOrNone(rows)
         : rows[0].external_id === externalId
-          ? { status: AccountStatus.Own }
-          : { status: AccountStatus.Taken };
+          ? { status: UserStatus.Own }
+          : { status: UserStatus.Taken };
 
   return new ValidResult(result);
 }

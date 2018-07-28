@@ -8,31 +8,31 @@ import {
 } from "scuttlespace-api-common";
 import { getPool } from "../pool";
 
-export interface ICreateOrRenameAccountArgs {
+export interface ICreateOrRenameUserArgs {
   externalId: string;
   username: string;
 }
 
-export enum CreateOrRenameAccountResult {
+export enum CreateOrRenameUserResult {
   Created = "CREATED",
   Own = "OWN",
   Renamed = "RENAMED",
   Taken = "TAKEN"
 }
 
-export async function createOrRenameAccount(
-  accountInfo: ICreateOrRenameAccountArgs,
+export async function createOrRenameUser(
+  userInfo: ICreateOrRenameUserArgs,
   context: ICallContext
-): Promise<ServiceResult<CreateOrRenameAccountResult>> {
+): Promise<ServiceResult<CreateOrRenameUserResult>> {
   const pool = getPool();
-  return isValidUsername(accountInfo.username)
+  return isValidUsername(userInfo.username)
     ? await (async () => {
         const usernameCheckParams = new psy.Params({
-          username: accountInfo.username
+          username: userInfo.username
         });
 
         const { rows: usernameRows } = await pool.query(
-          `SELECT * FROM account WHERE username=${usernameCheckParams.id(
+          `SELECT * FROM scuttlespace_user WHERE username=${usernameCheckParams.id(
             "username"
           )}`,
           usernameCheckParams.values()
@@ -40,16 +40,16 @@ export async function createOrRenameAccount(
 
         return usernameRows.length
           ? new ValidResult(
-              usernameRows[0].external_id === accountInfo.externalId
-                ? CreateOrRenameAccountResult.Own
-                : CreateOrRenameAccountResult.Taken
+              usernameRows[0].external_id === userInfo.externalId
+                ? CreateOrRenameUserResult.Own
+                : CreateOrRenameUserResult.Taken
             )
           : await (async () => {
               const existingCheckParams = new psy.Params({
-                external_id: accountInfo.externalId
+                external_id: userInfo.externalId
               });
               const { rows: existingRows } = await pool.query(
-                `SELECT * FROM account WHERE external_id=${existingCheckParams.id(
+                `SELECT * FROM scuttlespace_user WHERE external_id=${existingCheckParams.id(
                   "external_id"
                 )}`,
                 existingCheckParams.values()
@@ -58,37 +58,37 @@ export async function createOrRenameAccount(
               return existingRows.length
                 ? await (async () => {
                     const params = new psy.Params({
-                      external_id: accountInfo.externalId,
-                      username: accountInfo.username
+                      external_id: userInfo.externalId,
+                      username: userInfo.username
                     });
 
                     await pool.query(
-                      `UPDATE account SET username=${params.id(
+                      `UPDATE scuttlespace_user SET username=${params.id(
                         "username"
                       )} WHERE external_id=${params.id("external_id")}
                   `,
                       params.values()
                     );
 
-                    return new ValidResult(CreateOrRenameAccountResult.Renamed);
+                    return new ValidResult(CreateOrRenameUserResult.Renamed);
                   })()
                 : await (async () => {
                     const params = new psy.Params({
                       about: "",
                       domain: "",
                       enabled: true,
-                      external_id: accountInfo.externalId,
-                      username: accountInfo.username
+                      external_id: userInfo.externalId,
+                      username: userInfo.username
                     });
 
                     await pool.query(
                       `
-                  INSERT INTO account(${params.columns()})
+                  INSERT INTO scuttlespace_user(${params.columns()})
                   VALUES(${params.ids()})`,
                       params.values()
                     );
 
-                    return new ValidResult(CreateOrRenameAccountResult.Created);
+                    return new ValidResult(CreateOrRenameUserResult.Created);
                   })();
             })();
       })()

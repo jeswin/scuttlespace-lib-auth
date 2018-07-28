@@ -5,11 +5,11 @@ import "should";
 import * as auth from "../";
 import setup from "../setup";
 
-import activationTests from "./account/activation-tests";
-import accountCreationAndRenameTests from "./account/creation-or-rename-tests";
-import accountDetailsTests from "./account/details-tests";
-import accountSettingsTests from "./account/settings-tests";
-import statusCheckTests from "./account/status-check-tests";
+import activationTests from "./user/activation-tests";
+import userCreationAndRenameTests from "./user/creation-or-rename-tests";
+import userDetailsTests from "./user/details-tests";
+import userSettingsTests from "./user/settings-tests";
+import statusCheckTests from "./user/status-check-tests";
 
 import addPermissionsTests from "./permissions/add-tests";
 import clearPermissionsTests from "./permissions/clear-tests";
@@ -103,20 +103,20 @@ export const user3 = {
 export async function insertUser(user: any, pool: pg.Pool) {
   const params = new psy.Params(user);
   await pool.query(
-    `INSERT INTO account (${params.columns()}) VALUES(${params.ids()})`,
+    `INSERT INTO scuttlespace_user (${params.columns()}) VALUES(${params.ids()})`,
     params.values()
   );
 }
 
 export const permissions1 = {
   assignee_external_id: "gp001",
-  external_id: "jpk001",
+  assigner_external_id: "jpk001",
   permissions: "learning:read,pub:read,pub:write"
 };
 
 export const permissions2 = {
   assignee_external_id: "th001",
-  external_id: "jpk001",
+  assigner_external_id: "jpk001",
   permissions: "pub:read"
 };
 
@@ -126,7 +126,7 @@ export async function insertPermissions(
 ) {
   const params = new psy.Params(permissions);
   await pool.query(
-    `INSERT INTO account_permissions (${params.columns()}) VALUES(${params.ids()})`,
+    `INSERT INTO user_permissions (${params.columns()}) VALUES(${params.ids()})`,
     params.values()
   );
 }
@@ -143,10 +143,10 @@ describe("auth", () => {
     await auth.init(getDbConfig());
   });
 
-  accountCreationAndRenameTests();
-  accountSettingsTests();
+  userCreationAndRenameTests();
+  userSettingsTests();
   statusCheckTests();
-  accountDetailsTests();
+  userDetailsTests();
   activationTests();
 
   getPermissionsTests();

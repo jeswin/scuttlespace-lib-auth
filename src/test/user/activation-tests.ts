@@ -10,14 +10,14 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser({ ...user1, enabled: false }, pool);
-      const apiResult = await auth.enableAccount("jpk001", getCallContext());
+      const apiResult = await auth.enableUser("jpk001", getCallContext());
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
-        `SELECT * FROM account WHERE external_id='jpk001'`
+        `SELECT * FROM scuttlespace_user WHERE external_id='jpk001'`
       );
 
       rows.length.should.equal(1);
@@ -28,14 +28,14 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
-      const apiResult = await auth.disableAccount("jpk001", getCallContext());
+      const apiResult = await auth.disableUser("jpk001", getCallContext());
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
-        `SELECT * FROM account WHERE external_id='jpk001'`
+        `SELECT * FROM scuttlespace_user WHERE external_id='jpk001'`
       );
 
       rows.length.should.equal(1);
@@ -46,33 +46,33 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser({ ...user1, enabled: false }, pool);
-      const apiResult = await auth.destroyAccount("jpk001", getCallContext());
+      const apiResult = await auth.destroyUser("jpk001", getCallContext());
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
-        `SELECT * FROM account WHERE external_id='jpk001'`
+        `SELECT * FROM scuttlespace_user WHERE external_id='jpk001'`
       );
 
       rows.length.should.equal(0);
     });
 
-    it("does not destroy if account status is active", async () => {
+    it("does not destroy if user status is active", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
 
-      const result = await auth.destroyAccount("jpk001", getCallContext());
+      const result = await auth.destroyUser("jpk001", getCallContext());
       result.type.should.equal("error");
       if (result.type === "error") {
         result.error.code.should.equal("CANNOT_DELETE_ACTIVE_ACCOUNT");
         result.error.message.should.equal(
-          "An account in active status cannot be deleted."
+          "An user in active status cannot be deleted."
         );
       }
     });

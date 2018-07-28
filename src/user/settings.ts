@@ -5,17 +5,17 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
-import { getAccount, getMissingAccountError } from "../account/common";
 import { getPool } from "../pool";
+import { getMissingUserError, getUser } from "../user/common";
 
-export async function editAccountAbout(
+export async function editUserAbout(
   about: string,
   externalId: string,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
-  const account = await getAccount(externalId, context);
-  return account
+  const user = await getUser(externalId, context);
+  return user
     ? await (async () => {
         const params = new psy.Params({
           about,
@@ -23,25 +23,25 @@ export async function editAccountAbout(
         });
         await pool.query(
           `
-          UPDATE account SET about=${params.id(
+          UPDATE scuttlespace_user SET about=${params.id(
             "about"
           )} WHERE external_id=${params.id("external_id")}`,
           params.values()
         );
 
-        return new ValidResult({ username: account.username });
+        return new ValidResult({ username: user.username });
       })()
-    : getMissingAccountError(externalId);
+    : getMissingUserError(externalId);
 }
 
-export async function editAccountDomain(
+export async function editUserDomain(
   domain: string,
   externalId: string,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
-  const account = await getAccount(externalId, context);
-  return account
+  const user = await getUser(externalId, context);
+  return user
     ? await (async () => {
         const params = new psy.Params({
           domain,
@@ -49,12 +49,12 @@ export async function editAccountDomain(
         });
         await pool.query(
           `
-        UPDATE account SET domain=${params.id(
+        UPDATE scuttlespace_user SET domain=${params.id(
           "domain"
         )} WHERE external_id=${params.id("external_id")}`,
           params.values()
         );
-        return new ValidResult({ username: account.username });
+        return new ValidResult({ username: user.username });
       })()
-    : getMissingAccountError(externalId);
+    : getMissingUserError(externalId);
 }

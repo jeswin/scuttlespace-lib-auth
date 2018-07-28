@@ -8,14 +8,14 @@ const shouldLib = require("should");
 
 export default function() {
   describe("status check", () => {
-    it("gets account details by external_id", async () => {
+    it("gets user details by external_id", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
-      const result = await auth.getAccountByExternalId(
+      const result = await auth.getUserByExternalId(
         "jpk001",
         getCallContext()
       );
@@ -29,14 +29,14 @@ export default function() {
       });
     });
 
-    it("gets account details by username", async () => {
+    it("gets user details by username", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
-      const result = await auth.getAccountByUsername(
+      const result = await auth.getUserByUsername(
         "jeswin",
         getCallContext()
       );
@@ -50,14 +50,14 @@ export default function() {
       });
     });
 
-    it("gets no account details of caller if account missing", async () => {
+    it("gets no user details of caller if user missing", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
-      const result = await auth.getAccountByExternalId(
+      const result = await auth.getUserByExternalId(
         "boom1",
         getCallContext()
       );

@@ -6,78 +6,80 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
-import { getAccount, getMissingAccountError } from "../account/common";
 import { getPool } from "../pool";
+import { getMissingUserError, getUser } from "../user/common";
 
-export async function enableAccount(
+export async function enableUser(
   externalId: string,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
-  const account = await getAccount(externalId, context);
-  return account
+  const user = await getUser(externalId, context);
+  return user
     ? await (async () => {
         const params = new psy.Params({ external_id: externalId });
         await pool.query(
-          `UPDATE account SET enabled=true WHERE external_id=${params.id(
+          `UPDATE scuttlespace_user SET enabled=true WHERE external_id=${params.id(
             "external_id"
           )}`,
           params.values()
         );
-        return new ValidResult({ username: account.username });
+        return new ValidResult({ username: user.username });
       })()
-    : getMissingAccountError(externalId);
+    : getMissingUserError(externalId);
 }
 
-export async function disableAccount(
+export async function disableUser(
   externalId: string,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
-  const account = await getAccount(externalId, context);
-  return account
+  const user = await getUser(externalId, context);
+  return user
     ? await (async () => {
         const params = new psy.Params({ external_id: externalId });
         await pool.query(
-          `UPDATE account SET enabled=false WHERE external_id=${params.id(
+          `UPDATE scuttlespace_user SET enabled=false WHERE external_id=${params.id(
             "external_id"
           )}`,
           params.values()
         );
-        return new ValidResult({ username: account.username });
+        return new ValidResult({ username: user.username });
       })()
-    : getMissingAccountError(externalId);
+    : getMissingUserError(externalId);
 }
 
-export async function destroyAccount(
+export async function destroyUser(
   externalId: string,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
-  const account = await getAccount(externalId, context);
-  return account
+  const user = await getUser(externalId, context);
+  return user
     ? await (async () => {
         const params = new psy.Params({ external_id: externalId });
 
         const { rows } = await pool.query(
-          `SELECT * FROM account WHERE external_id=${params.id("external_id")}`,
+          `SELECT * FROM scuttlespace_user WHERE external_id=${params.id(
+            "external_id"
+          )}`,
           params.values()
         );
 
         return !rows[0].enabled
           ? await (async () => {
               await pool.query(
-                `DELETE FROM account WHERE external_id=${params.id(
+                `DELETE FROM scuttlespace_user WHERE external_id=${params.id(
                   "external_id"
                 )}`,
                 params.values()
               );
-              return new ValidResult({ username: account.username });
+              return new ValidResult({ username: user.username });
             })()
           : new ErrorResult({
               code: "CANNOT_DELETE_ACTIVE_ACCOUNT",
-              message: `An account in active status cannot be deleted.`
+              message: `An user in active status cannot be deleted.`
             });
       })()
-    : getMissingAccountError(externalId);
+    : getMissingUserError(externalId);
 }

@@ -6,16 +6,16 @@ import { dbConfig, getCallContext, insertUser, user1 } from "../test";
 
 export default function() {
   describe("status check", () => {
-    it("returns account status as 'AVAILABLE' if username does not exist", async () => {
+    it("returns user status as 'AVAILABLE' if username does not exist", async () => {
       const pool = psy.getPool(dbConfig);
       await auth.getUsernameAvailability("jeswin", "jpk001", getCallContext());
     });
 
-    it("returns account status as 'OWN' if username belongs to user", async () => {
+    it("returns user status as 'OWN' if username belongs to user", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       const params = new psy.Params({
         about: "hal9000 supervisor",
@@ -25,7 +25,7 @@ export default function() {
         username: "jeswin"
       });
       await pool.query(
-        `INSERT INTO account (${params.columns()}) VALUES(${params.ids()})`,
+        `INSERT INTO scuttlespace_user (${params.columns()}) VALUES(${params.ids()})`,
         params.values()
       );
 
@@ -41,11 +41,11 @@ export default function() {
       }
     });
 
-    it("returns account status as 'TAKEN' if username is in use", async () => {
+    it("returns user status as 'TAKEN' if username is in use", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
       const result = await auth.getUsernameAvailability(

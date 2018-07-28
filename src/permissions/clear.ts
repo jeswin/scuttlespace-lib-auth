@@ -7,32 +7,32 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
-import { getAccountByExternalId } from "../account";
 import { getPool } from "../pool";
+import { getUserByExternalId } from "../user";
 import { getPermissionsForUser } from "./get";
 
 export async function clearPermissions(
   module: string,
   assigneeExternalId: string,
-  externalId: string,
+  assignerExternalId: string,
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
-  const maybeAccount = await parseServiceResult(
-    getAccountByExternalId(externalId, context)
+  const maybeUser = await parseServiceResult(
+    getUserByExternalId(assignerExternalId, context)
   );
 
-  return maybeAccount
+  return maybeUser
     ? await (async () => {
         const maybePermissions = await parseServiceResult(
-          getPermissionsForUser(assigneeExternalId, externalId, context)
+          getPermissionsForUser(assigneeExternalId, assignerExternalId, context)
         );
         return !maybePermissions
-          ? new ValidResult({ username: maybeAccount.username })
+          ? new ValidResult({ username: maybeUser.username })
           : await (async () => {
               const updationParams = new psy.Params({
                 assignee_external_id: assigneeExternalId,
-                external_id: externalId,
+                assigner_external_id: assignerExternalId,
                 permissions: (typeof maybePermissions !== "undefined"
                   ? maybePermissions.permissions
                   : []
@@ -45,22 +45,22 @@ export async function clearPermissions(
 
               await pool.query(
                 `
-                  UPDATE account_permissions SET permissions=${updationParams.id(
+                  UPDATE user_permissions SET permissions=${updationParams.id(
                     "permissions"
                   )}
                   WHERE 
                     assignee_external_id = ${updationParams.id(
                       "assignee_external_id"
                     )} AND 
-                    external_id = ${updationParams.id("external_id")}
+                    assigner_external_id = ${updationParams.id("assigner_external_id")}
                 `,
                 updationParams.values()
               );
-              return new ValidResult({ username: maybeAccount.username });
+              return new ValidResult({ username: maybeUser.username });
             })();
       })()
     : new ErrorResult({
         code: "NO_ACCOUNT",
-        message: `${externalId} does not have an account. Create an account first.`
+        message: `${assignerExternalId} does not have an user. Create an user first.`
       });
 }

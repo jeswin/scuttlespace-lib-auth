@@ -5,49 +5,49 @@ import * as auth from "../../";
 import { dbConfig, getCallContext, insertUser, user1 } from "../test";
 
 export default function() {
-  describe("account creation and renaming", () => {
-    it("creates a new account (CREATED)", async () => {
+  describe("user creation and renaming", () => {
+    it("creates a new user (CREATED)", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
-      const accountInfo = {
+      const userInfo = {
         externalId: "jpk001",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameAccount(
-        accountInfo,
+      const result = await auth.createOrRenameUser(
+        userInfo,
         getCallContext()
       );
       result.type.should.equal("data");
       (result as any).data.should.equal("CREATED");
 
-      const { rows } = await pool.query(`SELECT * FROM account`);
+      const { rows } = await pool.query(`SELECT * FROM scuttlespace_user`);
       rows.length.should.equal(1);
       rows[0].username.should.equal("jeswin");
     });
 
-    it("renames if account exists (RENAMED)", async () => {
+    it("renames if user exists (RENAMED)", async () => {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
 
-      const accountInfo = {
+      const userInfo = {
         externalId: "jpk001",
         username: "jes"
       };
-      const result = await auth.createOrRenameAccount(
-        accountInfo,
+      const result = await auth.createOrRenameUser(
+        userInfo,
         getCallContext()
       );
       result.type.should.equal("data");
       (result as any).data.should.equal("RENAMED");
 
-      const { rows } = await pool.query(`SELECT * FROM account`);
+      const { rows } = await pool.query(`SELECT * FROM scuttlespace_user`);
       rows.length.should.equal(1);
       rows[0].username.should.equal("jes");
     });
@@ -56,16 +56,16 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
 
-      const accountInfo = {
+      const userInfo = {
         externalId: "jpk001",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameAccount(
-        accountInfo,
+      const result = await auth.createOrRenameUser(
+        userInfo,
         getCallContext()
       );
 
@@ -77,16 +77,16 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM account`);
+      await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
 
-      const accountInfo = {
+      const userInfo = {
         externalId: "alice001",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameAccount(
-        accountInfo,
+      const result = await auth.createOrRenameUser(
+        userInfo,
         getCallContext()
       );
 
