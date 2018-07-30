@@ -1,7 +1,7 @@
 import "mocha";
 import * as psy from "psychopiggy";
 import "should";
-import * as auth from "../../";
+import * as auth from "../..";
 import {
   dbConfig,
   getCallContext,

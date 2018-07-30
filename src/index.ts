@@ -1,6 +1,6 @@
 import { IDbConfig } from "psychopiggy";
+import { typeDefs, resolvers } from "./graphql-schema";
 import * as pool from "./pool";
-export { default as graphqlSchema } from "./graphql-schema";
 
 export * from "./permissions";
 export { default as setup } from "./setup";
@@ -11,3 +11,8 @@ export async function init(dbConfig: IDbConfig) {
     pool: await pool.init(dbConfig)
   };
 }
+
+export const schema = {
+  resolvers,
+  typeDefs
+};
