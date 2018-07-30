@@ -1,4 +1,4 @@
-export const User = `
+export const ScuttlespaceUser = `
   type ScuttlespaceUser {
     rowid: ID!
     username: String!
@@ -19,4 +19,4 @@ export const Permission = `
   }
 `;
 
-export default () => [User, Permission];
+export default () => [ScuttlespaceUser, Permission];
