@@ -1,5 +1,5 @@
 import { IDbConfig } from "psychopiggy";
-import { typeDefs, resolvers } from "./graphql-schema";
+import { resolvers, typeDefs } from "./graphql-schema";
 import * as pool from "./pool";
 
 export * from "./permissions";
