@@ -16,10 +16,7 @@ export default function() {
         externalId: "jpk001",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameUser(
-        userInfo,
-        getCallContext()
-      );
+      const result = await auth.createOrRenameUser(userInfo, getCallContext());
       result.type.should.equal("data");
       (result as any).data.should.equal("CREATED");
 
@@ -40,10 +37,7 @@ export default function() {
         externalId: "jpk001",
         username: "jes"
       };
-      const result = await auth.createOrRenameUser(
-        userInfo,
-        getCallContext()
-      );
+      const result = await auth.createOrRenameUser(userInfo, getCallContext());
       result.type.should.equal("data");
       (result as any).data.should.equal("RENAMED");
 
@@ -64,10 +58,7 @@ export default function() {
         externalId: "jpk001",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameUser(
-        userInfo,
-        getCallContext()
-      );
+      const result = await auth.createOrRenameUser(userInfo, getCallContext());
 
       result.type.should.equal("data");
       (result as any).data.should.equal("OWN");
@@ -85,10 +76,7 @@ export default function() {
         externalId: "alice001",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameUser(
-        userInfo,
-        getCallContext()
-      );
+      const result = await auth.createOrRenameUser(userInfo, getCallContext());
 
       result.type.should.equal("data");
       (result as any).data.should.equal("TAKEN");

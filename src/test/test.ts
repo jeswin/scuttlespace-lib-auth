@@ -2,7 +2,7 @@ import "mocha";
 import pg = require("pg");
 import * as psy from "psychopiggy";
 import "should";
-import * as auth from "../";
+import * as auth from "..";
 import setup from "../setup";
 
 import activationTests from "./user/activation-tests";

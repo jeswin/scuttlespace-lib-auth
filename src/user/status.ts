@@ -7,7 +7,7 @@ import {
   ValidResult
 } from "scuttlespace-api-common";
 import { getPool } from "../pool";
-import { getMissingUserError, getUser } from "../user/common";
+import { getMissingUserError, getUser } from "./common";
 
 export async function enableUser(
   externalId: string,

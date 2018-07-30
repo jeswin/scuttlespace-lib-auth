@@ -70,7 +70,9 @@ export async function addPermissions(
                     assignee_external_id = ${updationParams.id(
                       "assignee_external_id"
                     )} AND 
-                    assigner_external_id = ${updationParams.id("assigner_external_id")}
+                    assigner_external_id = ${updationParams.id(
+                      "assigner_external_id"
+                    )}
                 `,
                 updationParams.values()
               );
