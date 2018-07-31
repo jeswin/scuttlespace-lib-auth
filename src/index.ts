@@ -12,7 +12,7 @@ export async function init(dbConfig: IDbConfig) {
   };
 }
 
-export const schema = {
+export const graphqlSchema = {
   resolvers,
   typeDefs
 };
