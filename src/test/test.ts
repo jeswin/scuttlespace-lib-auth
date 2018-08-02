@@ -131,7 +131,7 @@ export async function insertPermissions(
   );
 }
 
-describe("auth", () => {
+describe("scuttlespace-service-user", () => {
   before(async () => {
     await recreateDb(dbConfig);
     psy.createPool(dbConfig);

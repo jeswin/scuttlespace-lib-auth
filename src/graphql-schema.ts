@@ -1,3 +1,6 @@
+import { IFindUserArgs, findUser } from "./user";
+import exception from "./exception";
+
 export const typeDefs = [
   `
   type ScuttlespaceUser {
@@ -27,8 +30,11 @@ export const typeDefs = [
 
 export const resolvers = {
   Query: {
-    user(root: any, { rowid, domain }: { rowid: string; domain: string }) {
-      return { username: "jes" };
+    async user(root: any, args: IFindUserArgs, context: any) {
+      const result = await findUser(args, context);
+      return result.type === "data"
+        ? result.data
+        : exception(result.error.code, result.error.message);
     }
   }
 };
