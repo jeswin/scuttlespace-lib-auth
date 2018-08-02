@@ -38,7 +38,7 @@ if (
 /* tslint:enable */
 
 export function getCallContext() {
-  return { id: "TEST_RUN" };
+  return { id: "TEST_RUN", session: "TEST_SESSION" };
 }
 
 async function recreateDb(config: psy.IDbConfig) {

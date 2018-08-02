@@ -10,16 +10,16 @@
   },
   "license": "AGPL-1.0",
   "dependencies": {
-    "@types/node": "^10.3.2",
-    "@types/pg": "^7.4.9",
+    "@types/node": "^10.5.5",
+    "@types/pg": "^7.4.10",
     "pg": "^7.4.3",
     "psychopiggy": "^0.0.2",
-    "scuttlespace-api-common": "^0.0.5"
+    "scuttlespace-api-common": "^0.0.8"
   },
   "devDependencies": {
-    "@types/mocha": "^5.2.0",
+    "@types/mocha": "^5.2.5",
     "@types/should": "^13.0.0",
-    "mocha": "5.1.1",
-    "should": "^13.2.1"
+    "mocha": "5.2.0",
+    "should": "^13.2.3"
   }
 }
