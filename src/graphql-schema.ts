@@ -25,7 +25,16 @@ export const typeDefs = [
   extend type Query {
     user(rowid: String, domain: String): ScuttlespaceUser
   }
-`
+`,
+  `
+  type CreateOrRenameUserArgs {
+    externalId String
+    username String
+  }
+  `,
+  `extend type Mutation {
+    createOrRenameUser(user: ScuttlespaceUser): 
+  }`
 ];
 
 export const resolvers = {
@@ -40,5 +49,6 @@ export const resolvers = {
         ? result.data
         : exception(result.error.code, result.error.message);
     }
-  }
+  },
+  Mutation: {}
 };
