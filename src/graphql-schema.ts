@@ -1,5 +1,5 @@
-import { IFindUserArgs, findUser } from "./user";
 import exception from "./exception";
+import { findUser, IFindUserArgs, IGetUserResult } from "./user";
 
 export const typeDefs = [
   `
@@ -30,7 +30,11 @@ export const typeDefs = [
 
 export const resolvers = {
   Query: {
-    async user(root: any, args: IFindUserArgs, context: any) {
+    async user(
+      root: any,
+      args: IFindUserArgs,
+      context: any
+    ): Promise<IGetUserResult | undefined> {
       const result = await findUser(args, context);
       return result.type === "data"
         ? result.data

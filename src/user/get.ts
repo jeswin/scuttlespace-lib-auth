@@ -5,8 +5,8 @@ import {
   ServiceResult,
   ValidResult
 } from "scuttlespace-api-common";
-import { getPool } from "../pool";
 import exception from "../exception";
+import { getPool } from "../pool";
 
 export interface IGetUserResult {
   about: string;
