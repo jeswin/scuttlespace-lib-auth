@@ -33,7 +33,7 @@ export const typeDefs = [
   }
   `,
   `extend type Mutation {
-    createOrRenameUser(user: ScuttlespaceUser): 
+    createOrRenameUser(args: CreateOrRenameUserArgs): 
   }`
 ];
 
