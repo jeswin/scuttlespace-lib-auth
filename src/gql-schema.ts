@@ -1,8 +1,7 @@
 import exception from "./exception";
 import { findUser, IFindUserArgs, IGetUserResult } from "./user";
 
-export const typeDefs = [
-  `
+export const typeDefs = `
   type ScuttlespaceUser {
     rowid: ID!
     username: String!
@@ -12,32 +11,30 @@ export const typeDefs = [
     about: String
     permissions: [Permission]
   }
-`,
-  `
+
   type Permission {
     rowid: ID!
     assigner: ScuttlespaceUser!
     assignee: ScuttlespaceUser!
     permissions: String
   }
-`,
-  `
+
   extend type Query {
     user(rowid: String, domain: String): ScuttlespaceUser
   }
-`,
-  `
+
   type CreateOrRenameUserArgs {
-    externalId String
-    username String
+    externalId: String
+    username: String
   }
-  `,
-  `extend type Mutation {
-    createOrRenameUser(args: CreateOrRenameUserArgs): 
-  }`
-];
+
+  extend type Mutation {
+    createOrRenameUser(args: CreateOrRenameUserArgs): String
+  }
+`;
 
 export const resolvers = {
+  Mutation: {},
   Query: {
     async user(
       root: any,
@@ -49,6 +46,5 @@ export const resolvers = {
         ? result.data
         : exception(result.error.code, result.error.message);
     }
-  },
-  Mutation: {}
+  }
 };

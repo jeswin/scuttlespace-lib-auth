@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import { IDbConfig } from "psychopiggy";
-import { resolvers, typeDefs } from "./graphql-schema";
+import { resolvers, typeDefs } from "./gql-schema";
 import * as pool from "./pool";
 import { IFindUserArgs, IGetUserResult } from "./user/get";
 
