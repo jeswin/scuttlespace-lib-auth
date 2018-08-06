@@ -9,6 +9,7 @@ import exception from "../exception";
 import { getPool } from "../pool";
 
 export interface IGetUserResult {
+  rowid: string;
   about: string;
   domain: string;
   enabled: boolean;
@@ -58,6 +59,7 @@ export async function getUserByExternalId(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId,
+          rowid: rows[0].rowid,
           username: rows[0].username
         }
       : undefined;
@@ -84,6 +86,7 @@ export async function getUserByDomain(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
+          rowid: rows[0].rowid,
           username: rows[0].username
         }
       : undefined;
@@ -110,6 +113,7 @@ export async function getUserByUsername(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
+          rowid: rows[0].rowid,
           username
         }
       : undefined;

@@ -1,4 +1,5 @@
 rm -rf dist
+tsc src/graphql/schema.ts --outDir dist/graphql
+node tools/graphql-to-ts.js > src/graphql/schema-types.ts
 tsc
-node tools/graphql-to-ts.js > src/gql-schema-types.ts
-prettier --write src/gql-schema-types.ts
+prettier --write src/graphql/schema-types.ts

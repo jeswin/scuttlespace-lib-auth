@@ -1,10 +1,12 @@
-const gqlSchema = require("../dist/gql-schema");
+const gqlSchema = require("../dist/graphql/schema");
 const fromSchema = require("@gql2ts/from-schema");
 
 console.log(
   fromSchema.schemaToInterfaces(
-    gqlSchema.typeDefs,
-    {},
+    gqlSchema.default,
+    {
+      ignoreTypeNameDeclaration: true
+    },
     {
       interfaceBuilder(name, body) {
         if (
@@ -14,7 +16,10 @@ console.log(
             "IGraphQLResponseErrorLocation"
           ].includes(name)
         ) {
-          return `export interface ${name} ${body} `;
+          return `export interface ${name} ${body.replace(
+            /\| null/g,
+            "| undefined"
+          )} `;
         }
       }
     }
