@@ -12,8 +12,9 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM scuttlespace_user`);
-
+      await pool.query(`DELETE FROM user_permissions;`);
+      await pool.query(`DELETE FROM scuttlespace_user;`);
+      
       await insertUser(user1, pool);
       const result = await auth.getUserByExternalId("jpk001", getCallContext());
       shouldLib.exist(result);
@@ -22,16 +23,18 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         externalId: "jpk001",
+        rowid: (result as any).data.rowid,
         username: "jeswin"
       });
     });
-
+    
     it("gets user details by username", async () => {
       const pool = psy.getPool(dbConfig);
-
+      
       // clean up
-      await pool.query(`DELETE FROM scuttlespace_user`);
-
+      await pool.query(`DELETE FROM user_permissions;`);
+      await pool.query(`DELETE FROM scuttlespace_user;`);
+      
       await insertUser(user1, pool);
       const result = await auth.getUserByUsername("jeswin", getCallContext());
       shouldLib.exist(result);
@@ -40,6 +43,7 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         externalId: "jpk001",
+        rowid: (result as any).data.rowid,
         username: "jeswin"
       });
     });
@@ -48,7 +52,8 @@ export default function() {
       const pool = psy.getPool(dbConfig);
 
       // clean up
-      await pool.query(`DELETE FROM scuttlespace_user`);
+      await pool.query(`DELETE FROM user_permissions;`);
+      await pool.query(`DELETE FROM scuttlespace_user;`);
 
       await insertUser(user1, pool);
       const result = await auth.getUserByExternalId("boom1", getCallContext());
