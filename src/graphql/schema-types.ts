@@ -16,11 +16,6 @@ export interface IPermissionDTO {
   permissions: string | undefined;
 }
 
-export interface IGetUserArgsDTO {
-  rowid?: string | undefined;
-  domain?: string | undefined;
-}
-
 export interface ICreateOrRenameUserArgs {
   externalId?: string | undefined;
   username?: string | undefined;

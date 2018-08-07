@@ -17,13 +17,8 @@ export default `
     permissions: String
   }
 
-  input GetUserArgsDTO {
-    rowid: String
-    domain: String
-  }
-
   extend type Query {
-    user(args: GetUserArgsDTO!): ScuttlespaceUserDTO
+    user(domain: String, rowid: String): ScuttlespaceUserDTO
   }
 
   input CreateOrRenameUserArgs {
@@ -32,6 +27,6 @@ export default `
   }
 
   extend type Mutation {
-    createOrRenameUser(args: CreateOrRenameUserArgs): String
+    createOrRenameUser(input: CreateOrRenameUserArgs): String
   }
 `;

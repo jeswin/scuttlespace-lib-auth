@@ -7,7 +7,7 @@ export default {
   Query: {
     async user(
       root: any,
-      args: schema.IGetUserArgsDTO,
+      args: { domain: string; rowid: string },
       context: any
     ): Promise<schema.IScuttlespaceUserDTO | undefined> {
       const result = await findUser(args, context);
