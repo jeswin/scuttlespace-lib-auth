@@ -81,6 +81,7 @@ export const user1 = {
   domain: "jeswin.org",
   enabled: true,
   external_id: "jpk001",
+  pub: "hackers",
   username: "jeswin"
 };
 
@@ -89,6 +90,7 @@ export const user2 = {
   domain: "example.com",
   enabled: true,
   external_id: "gp001",
+  pub: "hackers",
   username: "geospeed"
 };
 
@@ -97,6 +99,7 @@ export const user3 = {
   domain: "th.example.com",
   enabled: true,
   external_id: "th001",
+  pub: "hackers",
   username: "thommi"
 };
 

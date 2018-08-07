@@ -10,6 +10,7 @@ import { getPool } from "../pool";
 
 export interface ICreateOrRenameUserArgs {
   externalId: string;
+  pub: string;
   username: string;
 }
 
@@ -78,6 +79,7 @@ export async function createOrRenameUser(
                       domain: "",
                       enabled: true,
                       external_id: userInfo.externalId,
+                      pub: userInfo.pub,
                       username: userInfo.username
                     });
 

@@ -5,8 +5,9 @@ export default async function setup() {
       username VARCHAR(64) UNIQUE NOT NULL,
       external_id VARCHAR(64) UNIQUE NOT NULL,
       enabled BOOLEAN NOT NULL,
+      about TEXT,
       domain VARCHAR(128),
-      about TEXT
+      pub VARCHAR(128) NOT NULL
     )`,
     `CREATE INDEX user_username_index ON scuttlespace_user(username)`,
     `CREATE INDEX user_external_id_index ON scuttlespace_user(external_id)`,

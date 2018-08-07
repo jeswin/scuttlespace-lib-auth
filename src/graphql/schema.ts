@@ -1,11 +1,12 @@
 export default `
   type ScuttlespaceUserDTO {
+    about: String
+    domain: String
+    enabled: Boolean!
+    externalId: String!
+    pub: String!
     rowid: ID!
     username: String!
-    externalId: String!
-    enabled: Boolean!
-    domain: String
-    about: String
     permissions: [PermissionDTO]
   }
 
@@ -16,7 +17,7 @@ export default `
     permissions: String
   }
 
-  type GetUserArgsDTO {
+  input GetUserArgsDTO {
     rowid: String
     domain: String
   }
@@ -25,7 +26,7 @@ export default `
     user(args: GetUserArgsDTO!): ScuttlespaceUserDTO
   }
 
-  type CreateOrRenameUserArgs {
+  input CreateOrRenameUserArgs {
     externalId: String
     username: String
   }

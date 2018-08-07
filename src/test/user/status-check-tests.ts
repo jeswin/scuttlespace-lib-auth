@@ -22,7 +22,8 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         external_id: "jpk001",
-        username: "jeswin"
+        pub: "hackers",
+        username: "jeswin",
       });
       await pool.query(
         `INSERT INTO scuttlespace_user (${params.columns()}) VALUES(${params.ids()})`,

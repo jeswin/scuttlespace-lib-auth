@@ -14,6 +14,7 @@ export interface IGetUserResult {
   domain: string;
   enabled: boolean;
   externalId: string;
+  pub: string;
   username: string;
 }
 
@@ -59,6 +60,7 @@ export async function getUserByExternalId(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId,
+          pub: rows[0].pub,
           rowid: rows[0].rowid,
           username: rows[0].username
         }
@@ -86,6 +88,7 @@ export async function getUserByDomain(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
+          pub: rows[0].pub,
           rowid: rows[0].rowid,
           username: rows[0].username
         }
@@ -113,6 +116,7 @@ export async function getUserByUsername(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
+          pub: rows[0].pub,
           rowid: rows[0].rowid,
           username
         }

@@ -23,6 +23,7 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         externalId: "jpk001",
+        pub: "hackers",
         rowid: (result as any).data.rowid,
         username: "jeswin"
       });
@@ -43,6 +44,7 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         externalId: "jpk001",
+        pub: "hackers",
         rowid: (result as any).data.rowid,
         username: "jeswin"
       });

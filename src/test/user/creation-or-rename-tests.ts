@@ -14,6 +14,7 @@ export default function() {
 
       const userInfo = {
         externalId: "jpk001",
+        pub: "hackers",
         username: "jeswin"
       };
       const result = await auth.createOrRenameUser(userInfo, getCallContext());
@@ -35,6 +36,7 @@ export default function() {
 
       const userInfo = {
         externalId: "jpk001",
+        pub: "hackers",
         username: "jes"
       };
       const result = await auth.createOrRenameUser(userInfo, getCallContext());
@@ -56,6 +58,7 @@ export default function() {
 
       const userInfo = {
         externalId: "jpk001",
+        pub: "hackers",
         username: "jeswin"
       };
       const result = await auth.createOrRenameUser(userInfo, getCallContext());
@@ -74,6 +77,7 @@ export default function() {
 
       const userInfo = {
         externalId: "alice001",
+        pub: "hackers",
         username: "jeswin"
       };
       const result = await auth.createOrRenameUser(userInfo, getCallContext());
