@@ -18,7 +18,7 @@ export default `
   }
 
   extend type Query {
-    user(domain: String, rowid: String): ScuttlespaceUserDTO
+    user(domain: String, username: String): ScuttlespaceUserDTO
   }
 
   input CreateOrRenameUserArgs {
