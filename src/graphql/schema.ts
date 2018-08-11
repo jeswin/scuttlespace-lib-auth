@@ -22,11 +22,12 @@ export default `
   }
 
   input CreateOrRenameUserArgs {
-    externalId: String
-    username: String
+    externalId: String!
+    pub: String!
+    username: String!
   }
-
+  
   extend type Mutation {
-    createOrRenameUser(input: CreateOrRenameUserArgs): String
+    createOrRenameUser(input: CreateOrRenameUserArgs): String!
   }
 `;

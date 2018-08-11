@@ -1,22 +1,23 @@
 export interface IScuttlespaceUserDTO {
-  about: string | undefined;
-  domain: string | undefined;
+  about?: string;
+  domain?: string;
   enabled: boolean;
   externalId: string;
   pub: string;
   rowid: string;
   username: string;
-  permissions: Array<IPermissionDTO> | undefined;
+  permissions?: Array<IPermissionDTO>;
 }
 
 export interface IPermissionDTO {
   rowid: string;
   assigner: IScuttlespaceUserDTO;
   assignee: IScuttlespaceUserDTO;
-  permissions: string | undefined;
+  permissions?: string;
 }
 
 export interface ICreateOrRenameUserArgs {
-  externalId?: string | undefined;
-  username?: string | undefined;
+  externalId: string;
+  pub: string;
+  username: string;
 }

@@ -1,9 +1,19 @@
 import exception from "../exception";
-import { findUser, IFindUserArgs, IGetUserResult } from "../user";
+import { createOrRenameUser, findUser, IGetUserResult } from "../user";
 import * as schema from "./schema-types";
+import { parseServiceResult } from "scuttlespace-api-common";
 
 export default {
-  Mutation: {},
+  Mutation: {
+    async createOrRenameUser(
+      root: any,
+      args: schema.ICreateOrRenameUserArgs,
+      context: any
+    ): Promise<string | undefined> {
+      const result = await createOrRenameUser(args, context);
+      return await parseServiceResult(result);
+    }
+  },
   Query: {
     async user(
       root: any,
@@ -11,11 +21,7 @@ export default {
       context: any
     ): Promise<schema.IScuttlespaceUserDTO | undefined> {
       const result = await findUser(args, context);
-      return result.type === "data"
-        ? typeof result.data !== "undefined"
-          ? { ...result.data, permissions: undefined }
-          : undefined
-        : exception(result.error.code, result.error.message);
+      return await parseServiceResult(result);
     }
   }
 };

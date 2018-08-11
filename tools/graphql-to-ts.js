@@ -16,10 +16,16 @@ console.log(
             "IGraphQLResponseErrorLocation"
           ].includes(name)
         ) {
-          return `export interface ${name} ${body.replace(
-            /\| null/g,
-            "| undefined"
-          )} `;
+          const newBody = body
+            .split("\n")
+            .map(
+              x =>
+                x.includes("| null")
+                  ? x.replace(":", "?:").replace(/\| null/g, "")
+                  : x
+            )
+            .join("\n");
+          return `export interface ${name} ${newBody} `;
         }
       }
     }
