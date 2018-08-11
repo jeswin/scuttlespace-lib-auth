@@ -1,7 +1,7 @@
+import { parseServiceResult } from "scuttlespace-api-common";
 import exception from "../exception";
 import { createOrRenameUser, findUser, IGetUserResult } from "../user";
 import * as schema from "./schema-types";
-import { parseServiceResult } from "scuttlespace-api-common";
 
 export default {
   Mutation: {

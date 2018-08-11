@@ -2,8 +2,11 @@ import { Pool } from "pg";
 import { IDbConfig } from "psychopiggy";
 import resolvers from "./graphql/resolvers";
 import typeDefs from "./graphql/schema";
+import {
+  ICreateOrRenameUserArgs,
+  IScuttlespaceUserDTO
+} from "./graphql/schema-types";
 import * as pool from "./pool";
-import { IFindUserArgs, IGetUserResult } from "./user/get";
 
 export * from "./permissions";
 export { default as setup } from "./setup";
