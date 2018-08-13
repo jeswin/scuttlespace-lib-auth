@@ -7,10 +7,10 @@ export default {
   Mutation: {
     async createOrRenameUser(
       root: any,
-      args: schema.ICreateOrRenameUserArgs,
+      args: { input: schema.ICreateOrRenameUserArgs },
       context: any
     ): Promise<string | undefined> {
-      const result = await createOrRenameUser(args, context);
+      const result = await createOrRenameUser(args.input, context);
       return await parseServiceResult(result);
     }
   },
