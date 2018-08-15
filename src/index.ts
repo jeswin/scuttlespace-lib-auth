@@ -1,6 +1,6 @@
 import { Pool } from "pg";
 import { IDbConfig } from "psychopiggy";
-import { schema, types } from "scuttlespace-service-user-graphql-schema";
+import { typeDefs, types } from "scuttlespace-service-user-graphql-schema";
 import * as pool from "./pool";
 import resolvers from "./resolvers";
 
@@ -17,5 +17,5 @@ export async function init(dbConfig: IDbConfig) {
 
 export const graphqlSchema = {
   resolvers,
-  schema
+  typeDefs
 };

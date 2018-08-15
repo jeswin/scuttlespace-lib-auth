@@ -1,5 +1,5 @@
 import { parseServiceResult } from "scuttlespace-api-common";
-import { schema, types } from "scuttlespace-service-user-graphql-schema";
+import { types } from "scuttlespace-service-user-graphql-schema";
 import exception from "./exception";
 import { createOrRenameUser, findUser, IGetUserResult } from "./user";
 
