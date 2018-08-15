@@ -5,15 +5,15 @@ import "should";
 import * as auth from "..";
 import setup from "../setup";
 
-import activationTests from "./user/activation-tests";
-import userCreationAndRenameTests from "./user/creation-or-rename-tests";
-import userDetailsTests from "./user/details-tests";
-import userSettingsTests from "./user/settings-tests";
-import statusCheckTests from "./user/status-check-tests";
+import activationTests from "./user/activationTests";
+import userCreationAndRenameTests from "./user/createOrRenameTests";
+import userDetailsTests from "./user/detailsTests";
+import userSettingsTests from "./user/settingsTests";
+import statusCheckTests from "./user/statusCheckTests";
 
-import addPermissionsTests from "./permissions/add-tests";
-import clearPermissionsTests from "./permissions/clear-tests";
-import getPermissionsTests from "./permissions/get-tests";
+import addPermissionsTests from "./permissions/addTests";
+import clearPermissionsTests from "./permissions/clearTests";
+import getPermissionsTests from "./permissions/getTests";
 
 /* tslint:disable */
 if (
