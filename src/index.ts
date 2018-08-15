@@ -1,12 +1,8 @@
 import { Pool } from "pg";
 import { IDbConfig } from "psychopiggy";
-import resolvers from "./graphql/resolvers";
-import typeDefs from "./graphql/schema";
-import {
-  ICreateOrRenameUserArgs,
-  IScuttlespaceUserDTO
-} from "./graphql/schema-types";
+import { schema, types } from "scuttlespace-service-user-graphql-schema";
 import * as pool from "./pool";
+import resolvers from "./resolvers";
 
 export * from "./permissions";
 export { default as setup } from "./setup";
@@ -21,5 +17,5 @@ export async function init(dbConfig: IDbConfig) {
 
 export const graphqlSchema = {
   resolvers,
-  typeDefs
+  schema
 };
