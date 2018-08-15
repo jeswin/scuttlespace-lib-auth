@@ -295,9 +295,9 @@ psychopiggy@^0.0.2:
     pg "^7.4.3"
     pg-params "^0.0.6"
 
-scuttlespace-api-common@^0.0.8:
+scuttlespace-service-common@^0.0.8:
   version "0.0.8"
-  resolved "https://registry.yarnpkg.com/scuttlespace-api-common/-/scuttlespace-api-common-0.0.8.tgz#46ccf8798a88d696cf551ebfeeed2d67cd595544"
+  resolved "https://registry.yarnpkg.com/scuttlespace-service-common/-/scuttlespace-service-common-0.0.8.tgz#46ccf8798a88d696cf551ebfeeed2d67cd595544"
   dependencies:
     "@types/node" "^10.5.5"
     standard-api "^0.0.3"

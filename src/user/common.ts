@@ -1,7 +1,7 @@
 import pg = require("pg");
 import * as psy from "psychopiggy";
-import { ICallContext } from "scuttlespace-api-common";
-import { ErrorResult } from "scuttlespace-api-common";
+import { ICallContext } from "scuttlespace-service-common";
+import { ErrorResult } from "scuttlespace-service-common";
 import { getPool } from "../pool";
 
 export function getMissingUserError(externalId: string) {

@@ -4,7 +4,7 @@ import {
   ICallContext,
   ServiceResult,
   ValidResult
-} from "scuttlespace-api-common";
+} from "scuttlespace-service-common";
 import exception from "../exception";
 import { getPool } from "../pool";
 

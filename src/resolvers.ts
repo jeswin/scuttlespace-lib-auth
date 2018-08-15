@@ -1,4 +1,4 @@
-import { parseServiceResult } from "scuttlespace-api-common";
+import { parseServiceResult } from "scuttlespace-service-common";
 import { types } from "scuttlespace-service-user-graphql-schema";
 import exception from "./exception";
 import { createOrRenameUser, findUser, IGetUserResult } from "./user";
@@ -20,8 +20,8 @@ export default {
       args: { domain: string; rowid: string },
       context: any
     ): Promise<types.IScuttlespaceUserDTO | undefined> {
-      const result = await findUser(args, context);
-      return await parseServiceResult(result);
+      const result = await parseServiceResult(await findUser(args, context));
+      return result && { ...result, permissions: null };
     }
   }
 };

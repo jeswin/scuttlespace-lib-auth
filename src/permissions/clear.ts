@@ -6,7 +6,7 @@ import {
   parseServiceResult,
   ServiceResult,
   ValidResult
-} from "scuttlespace-api-common";
+} from "scuttlespace-service-common";
 import { getPool } from "../pool";
 import { getUserByExternalId } from "../user";
 import { getPermissionsForUser } from "./get";
