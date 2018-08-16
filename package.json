@@ -14,8 +14,7 @@
     "@types/pg": "^7.4.10",
     "graphql-tag": "^2.9.2",
     "pg": "^7.4.3",
-    "psychopiggy": "^0.0.2",
-    "scuttlespace-service-common": "^0.0.8"
+    "psychopiggy": "^0.0.2"
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",

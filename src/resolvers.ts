@@ -20,8 +20,8 @@ export default {
       args: { domain: string; rowid: string },
       context: any
     ): Promise<types.IScuttlespaceUserDTO | undefined> {
-      const result = await parseServiceResult(await findUser(args, context));
-      return result && { ...result, permissions: null };
+      const result = await findUser(args, context);
+      return await parseServiceResult(result);
     }
   }
 };
