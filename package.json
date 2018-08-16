@@ -1,11 +1,10 @@
 {
   "name": "scuttlespace-service-user",
-  "version": "0.0.26",
+  "version": "0.0.27",
   "author": "Jeswin Kumar<jeswinpk@agilehead.com>",
   "main": "dist/index",
   "types": "dist/index.d.ts",
   "scripts": {
-    "build": "./build.sh",
     "test": "./build.sh && mocha dist/test/test.js"
   },
   "license": "AGPL-1.0",
