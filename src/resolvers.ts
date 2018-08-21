@@ -12,7 +12,8 @@ export default {
     ): Promise<string | undefined> {
       const result = await createOrRenameUser(args.input, context);
       return await parseServiceResult(result);
-    }
+    },
+    async enableUser()
   },
   Query: {
     async user(
