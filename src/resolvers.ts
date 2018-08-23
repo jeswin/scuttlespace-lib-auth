@@ -1,7 +1,7 @@
 import { parseServiceResult } from "scuttlespace-service-common";
 import { types } from "scuttlespace-service-user-graphql-schema";
 import exception from "./exception";
-import { createOrRenameUser, findUser, IGetUserResult } from "./user";
+import { createOrRenameUser, enableUser, findUser } from "./user";
 
 export default {
   Mutation: {
@@ -11,6 +11,14 @@ export default {
       context: any
     ): Promise<string | undefined> {
       const result = await createOrRenameUser(args.input, context);
+      return await parseServiceResult(result);
+    },
+    async enableUser(
+      root: any,
+      args: { input: types.IChangeUserStatusArgs },
+      context: any
+    ): Promise<types.IChangeUserStatusResult | undefined> {
+      const result = await enableUser(args.input.externalId, context);
       return await parseServiceResult(result);
     }
   },
