@@ -1,4 +1,14 @@
-export default `
+export default {
+  user: {
+    params: [
+      ["domain", "String"],
+      
+    ]
+      
+  }
+}
+
+`
   extend type Query {
     user(domain: String, externalId: String, username: String): ScuttlespaceUserDTO
   }
