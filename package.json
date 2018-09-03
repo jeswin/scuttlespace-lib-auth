@@ -17,8 +17,10 @@
   },
   "devDependencies": {
     "@types/mocha": "^5.2.5",
+    "@types/prettier": "^1.13.2",
     "@types/should": "^13.0.0",
     "mocha": "5.2.0",
+    "prettier": "^1.14.2",
     "should": "^13.2.3"
   }
 }
