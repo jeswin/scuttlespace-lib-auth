@@ -1,42 +1,74 @@
 import * as graphqlToTS from "graphql-to-ts";
+import { ITSInterfaceDefinition } from "graphql-to-ts";
+import prettier = require("prettier");
 import gqlSchema from "scuttlespace-service-user-graphql-schema";
-import { inspect } from "util";
 
-const resolvers = `
+const types = graphqlToTS.getTypes(gqlSchema);
+
+const query = types.interfaces.find(x => x.name === "IQuery");
+const mutation = types.interfaces.find(x => x.name === "IMutation");
+
+const handlersFile = "./user";
+const typesModule = "scuttlespace-service-user-graphql-schema";
+
+const allTypes = types.interfaces
+  .filter(x => !["IQuery", "IMutation"].includes(x.name))
+  .map(x => x.name)
+  .sort();
+
+const allMethods = ((query && query.fields) || [])
+  .map(x => x.name)
+  .concat(((mutation && mutation.fields) || []).map(x => x.name))
+  .sort();
+
+type IResolverTypes = [string, ITSInterfaceDefinition | undefined];
+
+const resolverTypes: IResolverTypes[] = [
+  ["Mutation", mutation],
+  ["Query", query]
+];
+
+const output = `
   import { parseServiceResult } from "scuttlespace-service-common";
-  import * as types from "scuttlespace-service-user-graphql-schema";
-  import { createOrRenameUser, enableUser, findUser } from "./user";
+  import { ${allTypes.join(",")} } from "${typesModule}";
+  import { ${allMethods.join(",")} } from "${handlersFile}";
 
   export default {
-    Mutation: {
-      async createOrRenameUser(
-        root: any,
-        args: { input: types.ICreateOrRenameUserArgs },
-        context: any
-      ): Promise<string | undefined> {
-        const result = await createOrRenameUser(args.input, context);
-        return await parseServiceResult(result);
-      },
-      async enableUser(
-        root: any,
-        args: { input: types.IChangeUserStatusArgs },
-        context: any
-      ): Promise<types.IChangeUserStatusResult | undefined> {
-        const result = await enableUser(args.input.externalId, context);
-        return await parseServiceResult(result);
-      }
-    },
-    Query: {
-      async user(
-        root: any,
-        args: { domain: string; rowid: string },
-        context: any
-      ): Promise<types.IScuttlespaceUserDTO | undefined> {
-        const result = await findUser(args, context);
-        return await parseServiceResult(result);
-      }
-    }
+    ${resolverTypes
+      .map(
+        ([prop, queryOrMutation]) => `
+        ${prop}: {
+          ${
+            queryOrMutation
+              ? queryOrMutation.fields
+                  .map(
+                    f => `
+                      async ${f.name}(
+                        root: any,
+                        args: {
+                          ${
+                            f.arguments && f.arguments.length
+                              ? f.arguments
+                                  .map(a => `${a.name}: ${a.type}`)
+                                  .join(",")
+                              : ""
+                          }
+                        },          
+                        context: any
+                      ): Promise<${f.type}> {
+                        const result = await ${f.name}(args, context);
+                        return await parseServiceResult(result);
+                      }
+                    `
+                  )
+                  .join(",")
+              : ""
+          }
+        }
+      `
+      )
+      .join(",")}
   };
 `;
 
-console.log(inspect(graphqlToTS.getTypes(gqlSchema), undefined, 8));
+console.log(prettier.format(output, { parser: "typescript" }));
