@@ -8,23 +8,16 @@ import {
 } from "scuttlespace-service-common";
 import { getPool } from "../pool";
 
-export interface ICreateOrRenameUserArgs {
-  externalId: string;
-  pub: string;
-  username: string;
-}
-
-export enum CreateOrRenameUserResult {
-  Created = "CREATED",
-  Own = "OWN",
-  Renamed = "RENAMED",
-  Taken = "TAKEN"
-}
+import {
+  CreateOrRenameUserStatus,
+  ICreateOrRenameUserArgs,
+  ICreateOrRenameUserResult
+} from "scuttlespace-service-user-graphql-schema";
 
 export async function createOrRenameUser(
-  userInfo: ICreateOrRenameUserArgs,
+  { input: userInfo }: { input: ICreateOrRenameUserArgs },
   context: ICallContext
-): Promise<ServiceResult<CreateOrRenameUserResult>> {
+): Promise<ServiceResult<ICreateOrRenameUserResult>> {
   const pool = getPool();
   return isValidUsername(userInfo.username)
     ? await (async () => {
@@ -40,11 +33,13 @@ export async function createOrRenameUser(
         );
 
         return usernameRows.length
-          ? new ValidResult(
-              usernameRows[0].external_id === userInfo.externalId
-                ? CreateOrRenameUserResult.Own
-                : CreateOrRenameUserResult.Taken
-            )
+          ? new ValidResult({
+              externalId: userInfo.externalId,
+              status:
+                usernameRows[0].external_id === userInfo.externalId
+                  ? CreateOrRenameUserStatus.Own
+                  : CreateOrRenameUserStatus.Taken
+            })
           : await (async () => {
               const existingCheckParams = new psy.Params({
                 external_id: userInfo.externalId
@@ -71,7 +66,10 @@ export async function createOrRenameUser(
                       params.values()
                     );
 
-                    return new ValidResult(CreateOrRenameUserResult.Renamed);
+                    return new ValidResult({
+                      externalId: userInfo.externalId,
+                      status: CreateOrRenameUserStatus.Renamed
+                    });
                   })()
                 : await (async () => {
                     const params = new psy.Params({
@@ -90,7 +88,10 @@ export async function createOrRenameUser(
                       params.values()
                     );
 
-                    return new ValidResult(CreateOrRenameUserResult.Created);
+                    return new ValidResult({
+                      externalId: userInfo.externalId,
+                      status: CreateOrRenameUserStatus.Created
+                    });
                   })();
             })();
       })()

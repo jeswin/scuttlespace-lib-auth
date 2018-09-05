@@ -9,8 +9,10 @@ import {
 import { getPool } from "../pool";
 import { getMissingUserError, getUser } from "./common";
 
+import { IChangeUserStatusArgs } from "scuttlespace-service-user-graphql-schema";
+
 export async function enableUser(
-  externalId: string,
+  { input: { externalId } }: { input: IChangeUserStatusArgs },
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
@@ -30,7 +32,7 @@ export async function enableUser(
 }
 
 export async function disableUser(
-  externalId: string,
+  { input: { externalId } }: { input: IChangeUserStatusArgs },
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
@@ -50,7 +52,7 @@ export async function disableUser(
 }
 
 export async function destroyUser(
-  externalId: string,
+  { input: { externalId } }: { input: IChangeUserStatusArgs },
   context: ICallContext
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();

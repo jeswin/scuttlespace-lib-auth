@@ -9,7 +9,7 @@ import {
 } from "scuttlespace-service-common";
 import { IPermission } from ".";
 import { getPool } from "../pool";
-import { getUserByExternalId } from "../user";
+import { findUser } from "../user/get";
 import { getPermissionsForUser } from "./get";
 
 export async function addPermissions(
@@ -20,7 +20,7 @@ export async function addPermissions(
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
   const maybeUser = await parseServiceResult(
-    getUserByExternalId(assignerExternalId, context)
+    findUser({ externalId: assignerExternalId }, context)
   );
 
   return maybeUser

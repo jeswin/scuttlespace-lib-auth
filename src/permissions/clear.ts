@@ -8,7 +8,7 @@ import {
   ValidResult
 } from "scuttlespace-service-common";
 import { getPool } from "../pool";
-import { getUserByExternalId } from "../user";
+import { findUser } from "../user/get";
 import { getPermissionsForUser } from "./get";
 
 export async function clearPermissions(
@@ -19,7 +19,7 @@ export async function clearPermissions(
 ): Promise<ServiceResult<{ username: string }>> {
   const pool = getPool();
   const maybeUser = await parseServiceResult(
-    getUserByExternalId(assignerExternalId, context)
+    findUser({ externalId: assignerExternalId }, context)
   );
 
   return maybeUser

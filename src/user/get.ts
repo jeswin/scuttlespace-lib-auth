@@ -7,6 +7,7 @@ import {
 } from "scuttlespace-service-common";
 import exception from "../exception";
 import { getPool } from "../pool";
+import { IScuttlespaceUser } from "scuttlespace-service-user-graphql-schema";
 
 export interface IGetUserResult {
   rowid: string;
@@ -27,7 +28,7 @@ export interface IFindUserArgs {
 export async function findUser(
   args: IFindUserArgs,
   context: ICallContext
-): Promise<ServiceResult<IGetUserResult | undefined>> {
+): Promise<ServiceResult<IScuttlespaceUser | undefined>> {
   const pool = getPool();
   return args.domain
     ? await getUserByDomain(args.domain, context)
@@ -44,7 +45,7 @@ export async function findUser(
 export async function getUserByExternalId(
   externalId: string,
   context: ICallContext
-): Promise<ServiceResult<IGetUserResult | undefined>> {
+): Promise<ServiceResult<IScuttlespaceUser | undefined>> {
   const pool = getPool();
   const params = new psy.Params({ external_id: externalId });
   const { rows } = await pool.query(
@@ -72,7 +73,7 @@ export async function getUserByExternalId(
 export async function getUserByDomain(
   domain: string,
   context: ICallContext
-): Promise<ServiceResult<IGetUserResult | undefined>> {
+): Promise<ServiceResult<IScuttlespaceUser | undefined>> {
   const pool = getPool();
   const params = new psy.Params({ domain });
   const { rows } = await pool.query(
@@ -100,7 +101,7 @@ export async function getUserByDomain(
 export async function getUserByUsername(
   username: string,
   context: ICallContext
-): Promise<ServiceResult<IGetUserResult | undefined>> {
+): Promise<ServiceResult<IScuttlespaceUser | undefined>> {
   const pool = getPool();
   const params = new psy.Params({ username });
   const { rows } = await pool.query(
@@ -109,13 +110,14 @@ export async function getUserByUsername(
     params.values()
   );
 
-  const result: IGetUserResult | undefined =
+  const result: IScuttlespaceUser | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
+          permissions: [],
           pub: rows[0].pub,
           rowid: rows[0].rowid,
           username

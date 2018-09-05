@@ -4,8 +4,8 @@ import {
   IChangeUserStatusResult,
   ICreateOrRenameUserArgs,
   ICreateOrRenameUserResult,
-  IPermissionDTO,
-  IScuttlespaceUserDTO
+  IPermission,
+  IScuttlespaceUser
 } from "scuttlespace-service-user-graphql-schema";
 import {
   createOrRenameUser,
@@ -20,7 +20,7 @@ export default {
     async createOrRenameUser(
       root: any,
       args: {
-        input: ICreateOrRenameUserArgs | null;
+        input: ICreateOrRenameUserArgs;
       },
       context: any
     ): Promise<ICreateOrRenameUserResult> {
@@ -30,7 +30,7 @@ export default {
     async enableUser(
       root: any,
       args: {
-        input: IChangeUserStatusArgs | null;
+        input: IChangeUserStatusArgs;
       },
       context: any
     ): Promise<IChangeUserStatusResult> {
@@ -40,7 +40,7 @@ export default {
     async disableUser(
       root: any,
       args: {
-        input: IChangeUserStatusArgs | null;
+        input: IChangeUserStatusArgs;
       },
       context: any
     ): Promise<IChangeUserStatusResult> {
@@ -50,7 +50,7 @@ export default {
     async destroyUser(
       root: any,
       args: {
-        input: IChangeUserStatusArgs | null;
+        input: IChangeUserStatusArgs;
       },
       context: any
     ): Promise<IChangeUserStatusResult> {
@@ -62,12 +62,12 @@ export default {
     async user(
       root: any,
       args: {
-        domain: string | null;
-        externalId: string | null;
-        username: string | null;
+        domain: string | undefined;
+        externalId: string | undefined;
+        username: string | undefined;
       },
       context: any
-    ): Promise<IScuttlespaceUserDTO | null> {
+    ): Promise<IScuttlespaceUser | undefined> {
       const result = await user(args, context);
       return await parseServiceResult(result);
     }
