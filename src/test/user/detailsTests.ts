@@ -14,9 +14,12 @@ export default function() {
       // clean up
       await pool.query(`DELETE FROM user_permissions;`);
       await pool.query(`DELETE FROM scuttlespace_user;`);
-      
+
       await insertUser(user1, pool);
-      const result = await auth.getUserByExternalId("jpk001", getCallContext());
+      const result = await auth.user(
+        { externalId: "jpk001" },
+        getCallContext()
+      );
       shouldLib.exist(result);
       (result as any).data.should.deepEqual({
         about: "hal9000 supervisor",
@@ -28,16 +31,16 @@ export default function() {
         username: "jeswin"
       });
     });
-    
+
     it("gets user details by username", async () => {
       const pool = psy.getPool(dbConfig);
-      
+
       // clean up
       await pool.query(`DELETE FROM user_permissions;`);
       await pool.query(`DELETE FROM scuttlespace_user;`);
-      
+
       await insertUser(user1, pool);
-      const result = await auth.getUserByUsername("jeswin", getCallContext());
+      const result = await auth.user({ username: "jeswin" }, getCallContext());
       shouldLib.exist(result);
       (result as any).data.should.deepEqual({
         about: "hal9000 supervisor",
@@ -58,7 +61,7 @@ export default function() {
       await pool.query(`DELETE FROM scuttlespace_user;`);
 
       await insertUser(user1, pool);
-      const result = await auth.getUserByExternalId("boom1", getCallContext());
+      const result = await auth.user({ username: "boom1" }, getCallContext());
       shouldLib.not.exist((result as any).data);
     });
   });

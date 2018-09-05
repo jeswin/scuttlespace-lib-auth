@@ -17,7 +17,11 @@ export default function() {
         pub: "hackers",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameUser(userInfo, getCallContext());
+
+      const result = await auth.createOrRenameUser(
+        { input: userInfo },
+        getCallContext()
+      );
       result.type.should.equal("data");
       (result as any).data.should.equal("CREATED");
 
@@ -39,7 +43,10 @@ export default function() {
         pub: "hackers",
         username: "jes"
       };
-      const result = await auth.createOrRenameUser(userInfo, getCallContext());
+      const result = await auth.createOrRenameUser(
+        { input: userInfo },
+        getCallContext()
+      );
       result.type.should.equal("data");
       (result as any).data.should.equal("RENAMED");
 
@@ -61,7 +68,10 @@ export default function() {
         pub: "hackers",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameUser(userInfo, getCallContext());
+      const result = await auth.createOrRenameUser(
+        { input: userInfo },
+        getCallContext()
+      );
 
       result.type.should.equal("data");
       (result as any).data.should.equal("OWN");
@@ -80,7 +90,10 @@ export default function() {
         pub: "hackers",
         username: "jeswin"
       };
-      const result = await auth.createOrRenameUser(userInfo, getCallContext());
+      const result = await auth.createOrRenameUser(
+        { input: userInfo },
+        getCallContext()
+      );
 
       result.type.should.equal("data");
       (result as any).data.should.equal("TAKEN");

@@ -9,16 +9,6 @@ import exception from "../exception";
 import { getPool } from "../pool";
 import { IScuttlespaceUser } from "scuttlespace-service-user-graphql-schema";
 
-export interface IGetUserResult {
-  rowid: string;
-  about: string;
-  domain: string;
-  enabled: boolean;
-  externalId: string;
-  pub: string;
-  username: string;
-}
-
 export interface IFindUserArgs {
   domain?: string;
   externalId?: string;
@@ -54,13 +44,14 @@ export async function getUserByExternalId(
     params.values()
   );
 
-  const result: IGetUserResult | undefined =
+  const result: IScuttlespaceUser | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId,
+          permissions: undefined,
           pub: rows[0].pub,
           rowid: rows[0].rowid,
           username: rows[0].username
@@ -82,13 +73,14 @@ export async function getUserByDomain(
     params.values()
   );
 
-  const result: IGetUserResult | undefined =
+  const result: IScuttlespaceUser | undefined =
     rows.length > 0
       ? {
           about: rows[0].about,
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
+          permissions: undefined,
           pub: rows[0].pub,
           rowid: rows[0].rowid,
           username: rows[0].username
@@ -117,7 +109,7 @@ export async function getUserByUsername(
           domain: rows[0].domain,
           enabled: rows[0].enabled,
           externalId: rows[0].external_id,
-          permissions: [],
+          permissions: undefined,
           pub: rows[0].pub,
           rowid: rows[0].rowid,
           username

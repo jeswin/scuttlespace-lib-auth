@@ -13,7 +13,10 @@ export default function() {
       await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser({ ...user1, enabled: false }, pool);
-      const apiResult = await auth.enableUser("jpk001", getCallContext());
+      const apiResult = await auth.enableUser(
+        { input: { externalId: "jpk001" } },
+        getCallContext()
+      );
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
@@ -31,7 +34,10 @@ export default function() {
       await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser(user1, pool);
-      const apiResult = await auth.disableUser("jpk001", getCallContext());
+      const apiResult = await auth.disableUser(
+        { input: { externalId: "jpk001" } },
+        getCallContext()
+      );
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
@@ -49,7 +55,10 @@ export default function() {
       await pool.query(`DELETE FROM scuttlespace_user`);
 
       await insertUser({ ...user1, enabled: false }, pool);
-      const apiResult = await auth.destroyUser("jpk001", getCallContext());
+      const apiResult = await auth.destroyUser(
+        { input: { externalId: "jpk001" } },
+        getCallContext()
+      );
       (apiResult as any).data.username.should.equal("jeswin");
 
       const { rows } = await pool.query(
@@ -67,7 +76,10 @@ export default function() {
 
       await insertUser(user1, pool);
 
-      const result = await auth.destroyUser("jpk001", getCallContext());
+      const result = await auth.destroyUser(
+        { input: { externalId: "jpk001" } },
+        getCallContext()
+      );
       result.type.should.equal("error");
       if (result.type === "error") {
         result.error.code.should.equal("CANNOT_DELETE_ACTIVE_ACCOUNT");
