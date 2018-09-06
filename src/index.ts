@@ -1,5 +1,13 @@
 import { Pool } from "pg";
 import { IDbConfig } from "psychopiggy";
+import {
+  IChangeUserStatusArgs,
+  IChangeUserStatusResult,
+  ICreateOrRenameUserArgs,
+  ICreateOrRenameUserResult,
+  IScuttlespaceUser
+} from "scuttlespace-service-user-graphql-schema";
+
 import * as pool from "./pool";
 import resolvers from "./resolvers";
 
