@@ -26,6 +26,7 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         externalId: "jpk001",
+        permissions: undefined,
         pub: "hackers",
         rowid: (result as any).data.rowid,
         username: "jeswin"
@@ -47,6 +48,7 @@ export default function() {
         domain: "jeswin.org",
         enabled: true,
         externalId: "jpk001",
+        permissions: undefined,
         pub: "hackers",
         rowid: (result as any).data.rowid,
         username: "jeswin"

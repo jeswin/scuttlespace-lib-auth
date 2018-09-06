@@ -23,7 +23,10 @@ export default function() {
         getCallContext()
       );
       result.type.should.equal("data");
-      (result as any).data.should.equal("CREATED");
+      (result as any).data.should.deepEqual({
+        externalId: "jpk001",
+        status: "Created"
+      });
 
       const { rows } = await pool.query(`SELECT * FROM scuttlespace_user`);
       rows.length.should.equal(1);
@@ -48,7 +51,10 @@ export default function() {
         getCallContext()
       );
       result.type.should.equal("data");
-      (result as any).data.should.equal("RENAMED");
+      (result as any).data.should.deepEqual({
+        externalId: "jpk001",
+        status: "Renamed"
+      });
 
       const { rows } = await pool.query(`SELECT * FROM scuttlespace_user`);
       rows.length.should.equal(1);
@@ -74,7 +80,10 @@ export default function() {
       );
 
       result.type.should.equal("data");
-      (result as any).data.should.equal("OWN");
+      (result as any).data.should.deepEqual({
+        externalId: "jpk001",
+        status: "Own"
+      });
     });
 
     it("does not create if username is in use (TAKEN)", async () => {
@@ -96,7 +105,10 @@ export default function() {
       );
 
       result.type.should.equal("data");
-      (result as any).data.should.equal("TAKEN");
+      (result as any).data.should.deepEqual({
+        externalId: "alice001",
+        status: "Taken"
+      });
     });
   });
 }
