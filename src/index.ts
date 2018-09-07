@@ -9,7 +9,7 @@ import {
 } from "scuttlespace-service-user-graphql-schema";
 
 import * as pool from "./pool";
-import resolvers from "./resolvers";
+export { default as resolvers } from "./resolvers";
 
 export * from "./permissions";
 export { default as setup } from "./setup";
@@ -21,7 +21,3 @@ export async function init(dbConfig: IDbConfig) {
     pool: pgPpool
   };
 }
-
-export const graphqlSchema = {
-  resolvers
-};
