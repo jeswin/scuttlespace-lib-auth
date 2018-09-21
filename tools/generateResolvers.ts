@@ -1,5 +1,5 @@
 import * as graphqlToTS from "graphql-to-ts";
-import { ITSInterfaceDefinition } from "graphql-to-ts";
+import { ITSInterface } from "graphql-to-ts";
 import prettier = require("prettier");
 import gqlSchema from "scuttlespace-service-user-graphql-schema";
 
@@ -21,7 +21,7 @@ const allMethods = ((query && query.fields) || [])
   .concat(((mutation && mutation.fields) || []).map(x => x.name))
   .sort();
 
-type IResolverTypes = [string, ITSInterfaceDefinition | undefined];
+type IResolverTypes = [string, ITSInterface | undefined];
 
 const resolverTypes: IResolverTypes[] = [
   ["Mutation", mutation],
@@ -49,13 +49,18 @@ const output = `
                           ${
                             f.arguments && f.arguments.length
                               ? f.arguments
-                                  .map(a => `${a.name}: ${a.type}`)
+                                  .map(
+                                    a =>
+                                      `${a.name}: ${graphqlToTS.typeToString(
+                                        a.type
+                                      )}`
+                                  )
                                   .join(",")
                               : ""
                           }
                         },          
                         context: any
-                      ): Promise<${f.type}> {
+                      ): Promise<${graphqlToTS.typeToString(f.type)}> {
                         const result = await ${f.name}(args, context);
                         return await parseServiceResult(result);
                       }
